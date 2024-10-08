@@ -110,6 +110,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     setMetaTags(): void {
 
         const { name, caracteristicas, brand, images, price, rating, inventario, urlAmigable, id } = this.product;
+        console.log(document.location.href)
 
         this.title.setTitle(name);
 

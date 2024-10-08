@@ -6,7 +6,7 @@ import { CompareService } from './shared/services/compare.service';
 import { WishlistService } from './shared/services/wishlist.service';
 
 
-import { CommonModule, isPlatformBrowser, ViewportScroller } from '@angular/common';
+import { CommonModule, DOCUMENT, isPlatformBrowser, ViewportScroller } from '@angular/common';
 import { NavigationEnd, Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { filter, first } from 'rxjs/operators';
 import { CurrencyService } from './shared/services/currency.service';
@@ -43,6 +43,7 @@ export class AppComponent implements OnInit {
 
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
+        @Inject(DOCUMENT) private document: Document,
         private router: Router,
         private toastr: ToastrService,
         private cart: CartService,
@@ -75,6 +76,7 @@ export class AppComponent implements OnInit {
                     preloader.classList.add('site-preloader__fade');
                 });
             });
+            this.setMetaTags();
         }
 
     }
@@ -112,64 +114,61 @@ export class AppComponent implements OnInit {
         this.wishlist.onAdding$.subscribe(product => {
             this.toastr.success(`Producto "${this.TitleCase(product.name)}" Agregado a la Lista de Deseos!`);
         });
-
-        this.metaTagService.addTags([
-            {
-                name: 'description',
-                content: this.StoreSvc.configuracionSitio.PosicionamientoEnGoogle,
-            },
-        ]);
-
-        // this.metaTagService.updateTag({
-        //     name: 'keywords',
-        //     content: this.StoreSvc.configuracionSitio.PalabrasClaves,
-        // })
-        // this.metaTagService.updateTag({
-        //     name: 'robots',
-        //     content: 'index, follow',
-        // })
-
-        // this.metaTagService.updateTag({
-        //     name: 'og:title',
-        //     content: this.StoreSvc.configuracionSitio.NombreCliente,
-        // })
-        // this.metaTagService.updateTag({
-        //     name: 'og:description',
-        //     content: this.StoreSvc.configuracionSitio.PosicionamientoEnGoogle,
-        // })
-        // this.metaTagService.updateTag({
-        //     name: 'og:image',
-        //     content: this.StoreSvc.configuracionSitio.LogoUrl,
-        // })
-        // this.metaTagService.updateTag({
-        //     name: 'og:url',
-        //     content: this.router.url,
-        // })
-        // this.metaTagService.updateTag({
-        //     name: 'og:site_name',
-        //     content: this.StoreSvc.configuracionSitio.NombreCliente,
-        // })
-
-        // this.metaTagService.updateTag({
-        //     name: 'twitter:card',
-        //     content:'summary_large_image',
-        // })
-        // this.metaTagService.updateTag({
-        //     name: 'twitter:title',
-        //     content: this.StoreSvc.configuracionSitio.NombreCliente,
-        // })
-        // this.metaTagService.updateTag({
-        //     name: 'twitter:description',
-        //     content: this.StoreSvc.configuracionSitio.PosicionamientoEnGoogle,
-        // })
-        // this.metaTagService.updateTag({
-        //     name: 'twitter:image',
-        //     content: this.StoreSvc.configuracionSitio.LogoUrl,
-        // })
-        // this.metaTagService.updateTag({
-        //     name: 'twitter:url',
-        //     content: this.router.url,
-        // })
     }
+
+    private setMetaTags(): void {
+        const { configuracionSitio } = this.StoreSvc;
+        const { redes } = this.StoreSvc;
+
+    
+        // Validar que configuracionSitio esté definido antes de agregar las meta tags
+        if (configuracionSitio) {
+            this.metaTagService.addTags([
+                // Meta generales
+                { name: 'description', content: configuracionSitio.PosicionamientoEnGoogle || '' },
+                { name: 'author', content: configuracionSitio.email || '' },
+                { name: 'address', content: configuracionSitio.address || '' },
+                { name: 'phone', content: configuracionSitio.phone || '' },
+                { name: 'hours', content: configuracionSitio.hours || '' },
+    
+                // Meta para redes sociales (Open Graph)
+                { property: 'og:title', content: this.negocio.configuracion.NombreCliente },
+                { property: 'og:description', content: configuracionSitio.PosicionamientoEnGoogle || '' },
+                { property: 'og:type', content: 'website' },
+                { property: 'og:url', content: document.location.href },
+                { property: 'og:email', content: configuracionSitio.email || '' },
+                { property: 'og:phone_number', content: configuracionSitio.phone || '' },
+                { property: 'og:address', content: configuracionSitio.address || '' },
+                { property: 'og:hours', content: configuracionSitio.hours || '' },
+                { property: 'og:image', content: document.location.href + '/assets/configuracion/LOGO.png' }, // Cambiar si tienes una imagen representativa
+                
+                // Meta para WhatsApp o contacto
+                { name: 'contact:phone_number', content: configuracionSitio.NumeroWpp.toString() || '' },
+                
+                // Meta para Twitter
+                { name: 'twitter:card', content:'summary_large_image' },
+                { name: 'twitter:site', content: '@' + redes[1].url || '' },
+                { name: 'twitter:creator', content: '@' + redes[1].url || '' },
+                { name: 'twitter:title', content: this.negocio.configuracion.NombreCliente },
+                { name: 'twitter:description', content: configuracionSitio.PosicionamientoEnGoogle || '' },
+                { name: 'twitter:image', content: document.location.href + '/assets/configuracion/LOGO.png' }, // Cambiar si tienes una imagen representativa
+                
+                // Meta para Facebook
+                { property: 'fb:app_id', content: redes[1].url || '' },
+                { property: 'fb:pages', content: redes[1].url || '' },
+                { property: 'og:site_name', content: this.negocio.configuracion.NombreCliente },
+                { property: 'og:description', content: configuracionSitio.PosicionamientoEnGoogle || '' },
+                { property: 'og:image', content: document.location.href + '/assets/configuracion/LOGO.png' },
+
+                // Meta para instagram
+            { name: 'instagram:username', content: 'magicomundo.co' },
+                { name: 'og:image:width', content: '640' },
+                { name: 'og:image:height', content: '640' },
+            ]);
+        } else {
+            console.error('No se encontró la configuración del sitio.');
+        }
+    }
+    
 }
 
