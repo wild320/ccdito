@@ -8,7 +8,7 @@ import { ArticulosService } from '../../../../shared/services/articulos.service'
 
 // modelos
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { Meta } from '@angular/platform-browser';
+import { Meta, Title } from '@angular/platform-browser';
 import { Item } from '../../../../../data/modelos/articulos/Items';
 
 @Component({
@@ -31,7 +31,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
         private shop: ShopService,
         private route: ActivatedRoute,
         public articulossvc: ArticulosService,
-        private meta: Meta
+        private meta: Meta,
+        private title: Title,
     ) { }
 
     ngOnInit(): void {
@@ -107,9 +108,12 @@ export class PageProductComponent implements OnInit, OnDestroy {
     }
 
     setMetaTags(): void {
+
         const { name, caracteristicas, brand, images, price, rating, inventario, urlAmigable, id } = this.product;
 
-        const baseHref = this.document.querySelector('base')?.getAttribute('href') || '';
+        this.title.setTitle(name);
+
+        const baseHref = "https://copiacarro--magico-mundo.us-central1.hosted.app/";
     
         // Set meta description (use 'caracteristicas' or a default value)
         const description = caracteristicas || 'Compra este producto de alta calidad al mejor precio.';
