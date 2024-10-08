@@ -46,7 +46,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
                     this.product = this.articulossvc.getArticuloDetalle().item;
                     console.log("detll", this.product);
                     if (this.product) {
-                        this.setMetaTags();
                         this.cadenaString = this.product.name;
                         this.valorProductoUnit = this.product.price;
 
@@ -86,6 +85,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
                 this.sidebarPosition = data['sidebarPosition'] || this.sidebarPosition;
 
             });
+            
+            this.setMetaTags();
         }
     }
 
@@ -110,11 +111,10 @@ export class PageProductComponent implements OnInit, OnDestroy {
     setMetaTags(): void {
 
         const { name, caracteristicas, brand, images, price, rating, inventario, urlAmigable, id } = this.product;
-        console.log(document.location.href)
 
         this.title.setTitle(name);
 
-        const baseHref = "https://copiacarro--magico-mundo.us-central1.hosted.app/";
+        const baseHref = `${document.baseURI}`;
     
         // Set meta description (use 'caracteristicas' or a default value)
         const description = caracteristicas || 'Compra este producto de alta calidad al mejor precio.';
