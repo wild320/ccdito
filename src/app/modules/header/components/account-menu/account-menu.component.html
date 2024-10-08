@@ -1,0 +1,68 @@
+<div class="account-menu">
+    <form [formGroup]="ingresoForm" (ngSubmit)="submitForm()" *ngIf="!usuariologueado"  class="account-menu__form">
+        <div class="account-menu__form-title">Ingrese a su cuenta</div>
+        <div class="form-group">
+            <label for="header-signin-email" class="sr-only">Usuario</label>
+            <input id="header-signin-email" formControlName="usuario"  type="text" class="form-control form-control-sm" placeholder="Usuario">
+        </div>
+        <div class="form-group">
+            <label for="header-signin-password" class="sr-only">Contraseña</label>
+            <div class="account-menu__form-forgot">
+                <input id="header-signin-password" formControlName="contrasena" type="password" class="form-control form-control-sm" placeholder="Contraseña">
+                <a [routerLink]="RutaRecuperarContrasena" class="account-menu__form-forgot-link">¿Olvidó?</a>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <span class="form-check-input input-check">
+                    <span class="input-check__body">
+                        <input formControlName= "recordar" class="input-check__input" type="checkbox" id="login-remember1">
+                        <span class="input-check__box"></span>
+                        <app-icon class="input-check__icon" name="check-9x7" size="9x7"></app-icon>
+                    </span>
+                </span>
+                <label class="form-check-label" for="login-remember">Recordar</label>
+            </div>
+        </div>    
+        <div class="form-group account-menu__form-button">
+            <button 
+            type="submit" 
+            [disabled]="loading" 
+            class="btn btn-primary btn-sm">
+            <i *ngIf="!loading"> Ingresar </i>
+            <i *ngIf="loading"> Cargando.... </i>
+            </button>
+
+        </div>
+
+        <div *ngIf="mensajeerror.length>0" class="alert alert-danger"  role="alert">
+            {{mensajeerror}}
+          </div>
+
+        <div class="account-menu__form-link"><a routerLink="/account/login" (click)="closeMenu.emit()">Crear Usuario</a></div>
+        
+    </form>
+    <div *ngIf="usuariologueado" class="account-menu__divider"></div>
+    <a *ngIf="usuariologueado" routerLink="/account/dashboard" class="account-menu__user" (click)="closeMenu.emit()">
+        <!----
+        <div class="account-menu__user-avatar">
+            <img src="assets/images/avatars/avatar-3.jpg" alt="">
+        </div>
+        ----->
+        <div class="account-menu__user-info">
+            <div class="account-menu__user-name">{{usuariosvc.razonsocial | titlecase}}</div>
+            <div class="account-menu__user-email">{{usuariosvc.correo}}</div>
+        </div>
+    </a>
+    <div *ngIf="usuariologueado" class="account-menu__divider"></div>
+    <ul *ngIf="usuariologueado" class="account-menu__links">
+        <li><a routerLink="/account/profile" (click)="closeMenu.emit()">Editar Perfil</a></li>
+        <li><a routerLink="/account/orders" (click)="closeMenu.emit()">Historial de Pedidos</a></li>
+        <li><a routerLink="/account/addresses" (click)="closeMenu.emit()">Direcciones</a></li>
+        <li><a routerLink="/account/password" (click)="closeMenu.emit()">Contraseña</a></li>
+    </ul>
+    <div *ngIf="usuariologueado" class="account-menu__divider"></div>
+    <ul *ngIf="usuariologueado" class="account-menu__links">
+        <li><a routerLink="/account/login" (click)="CerrarSesion()">Cerrar Sesión</a></li>
+    </ul>
+</div>

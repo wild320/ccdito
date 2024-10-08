@@ -1,0 +1,14 @@
+<div class="site-footer__widget footer-contacts">
+    <h5 class="footer-contacts__title">Contáctanos</h5>
+
+    <div class="footer-contacts__text">
+        A través de los siguientes medios puedes ponerte en contacto con nosotros
+    </div>
+
+    <ul class="footer-contacts__contacts">
+        <li><i class="footer-contacts__icon fas fa-globe-americas"></i> {{ store.configuracionSitio.address | titlecase }}</li>
+        <li><i class="footer-contacts__icon far fa-envelope"></i> {{ store.configuracionSitio.email }}</li>
+        <li><i class="footer-contacts__icon fas fa-mobile-alt"></i> {{ store.configuracionSitio.phone }}</li>
+        <li><i class="footer-contacts__icon far fa-clock"></i> {{ store.configuracionSitio.hours }}</li>
+    </ul>
+</div>

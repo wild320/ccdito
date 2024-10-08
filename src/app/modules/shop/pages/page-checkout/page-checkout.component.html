@@ -1,0 +1,228 @@
+<app-page-header [header]="'Pago'" [breadcrumbs]="[
+    {label: 'Inicio',          url: root.home()},
+    {label: 'Carro de Compras', url: root.cart()},
+    {label: 'Pago',      url: ''}
+]"></app-page-header>
+
+<div class="checkout block">
+    <div class="container">
+        <div class="row">
+
+            <form class = "row"  [formGroup]="ClientePedidoForm" (ngSubmit)="submitForm()"> 
+
+                <div class="col-12 mb-3" *ngIf="!EsUsuarioLogueado">
+                    <app-alert type="primary" size="lg">Ya eres nuestro cliente? <a [routerLink]="root.login()">Clic para ingresar </a></app-alert>
+                </div>
+
+                <div class="col-12 col-lg-6 col-xl-7" *ngIf="EsUsuarioLogueado">
+                    <div class="card mb-lg-0">
+                        <div class="card-body">
+                            <h3 class="card-title">Detalles de facturación</h3>
+                
+                            <div class="form-group">
+                                <label for="checkout-company-name">Cliente </label>
+                                <input type="text" formControlName="cliente" [readonly]="true" class="form-control" id="checkout-company-name" placeholder="Cliente">
+                            </div>
+                            <p style="color:red; margin-top: -20px;" [hidden]="this.usuariosvc?.addresses[0]?.direccion">Aún no tienes direcciones asociadas. <a style="color:red; font-weight: bold; cursor: pointer;" (click)="redireccionar()">Haz clic para agregar una</a> </p>
+                            <div  [hidden]="!this.usuariosvc?.addresses[0]?.direccion">
+
+                                <div class="form-group">
+   
+                                    <label for="checkout-country">Dirección</label>
+                                    <select id="checkout-direction" formControlName="seldireccion" (change)="CambiarDireccion($event.target['value'])"  class="form-control">
+                                        <option value="" default selected>Selecciona una dirección...</option>
+                                        <option *ngFor="let address of this.usuariosvc.addresses" [value]="address.Id" >  {{address.direccion | titlecase}} - {{address.ciudad | titlecase}}  - {{address.estado | titlecase}}  </option>
+                                    </select>
+                                </div>
+    
+                               <div class="form-group">
+                                <label for="checkout-country">Pais</label>
+                                <input id="checkout-country" formControlName="Pais" type="text" [readonly]="true" class="form-control" placeholder="Pais">
+                            </div>
+        
+                            <div class="form-group">
+                                <label for="checkout-state">Estado / Departamento</label>
+                                <input id="checkout-state" formControlName="Departamento" type="text" [readonly]="true" class="form-control" placeholder="Departamento">
+                            </div>    
+        
+                            <div class="form-group">
+                                <label for="checkout-city">Ciudad / Municipio</label>
+                                <input id="checkout-city" formControlName="Ciudad" type="text" [readonly]="true" class="form-control" placeholder="Ciudad">
+                            </div>
+        
+                            <div class="form-group">
+                                <label for="checkout-street-address">Dirección</label>
+                                <input type="text" class="form-control" formControlName="Direccion" [readonly]="true" id="checkout-street-address" placeholder="Dirección">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="checkout-phone">Telefono</label>
+                                    <input type="text" class="form-control" id="checkout-phone" [readonly]="true" formControlName="Telefono"  placeholder="Telefono">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="checkout-phone">Correo Electrónico </label>
+                                    <input type="text" class="form-control" id="checkout-mail" [readonly]="true" formControlName="Correo"  placeholder="Correo Electrónico ">
+                            </div>
+
+ 
+                        </div>
+                        <div class="card-divider"></div>
+                        <div class="card-body">
+                            <h3 class="card-title">Detalles de envío</h3>
+
+
+                            <div class="form-group">
+                                <label for="checkout-comment">Observaciones<span class="text-muted">(Opcional)</span></label>
+                                <textarea id="checkout-comment" formControlName="Observaciones"  class="form-control" rows="4"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                            </div>
+                           
+
+                <div class="col-12 col-lg-6 col-xl-5 mt-4 mt-lg-0" *ngIf="EsUsuarioLogueado">
+                    <div class="card mb-0">
+                        <div class="card-body">
+                            <h3 class="card-title">Su Pedido</h3>
+
+                            <table class="checkout__totals">
+                                <thead class="checkout__totals-header">
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Total</th>
+                                </tr>
+                                </thead>
+                                <tbody class="checkout__totals-products">
+                                <tr *ngFor="let item of cart.items$|async">
+                                    <td>{{ item.product.name | titlecase }} × {{ item.quantity }}</td>
+                                    <td>{{ item.product.price * item.quantity|currencyFormat }}</td>
+                                </tr>
+                                </tbody>
+                                <tbody *ngIf="(cart.totals$|async).length" class="checkout__totals-subtotals">
+
+                                <tr>
+                                    <th>Subtotal</th>
+                                    <td>{{ cart.subtotal$|async|currencyFormat }}</td>
+                                </tr>
+
+                                <tr>
+                                    <th>Descuentos</th>
+                                    <td>{{ cart.discounts$|async|currency }}</td>
+                                </tr>
+
+                                <tr *ngFor="let total of cart.totals$|async">
+                                    <th>{{ total.title }}</th>
+                                    <td>{{ total.price|currencyFormat }}</td>
+                                </tr>
+                                </tbody>
+                                <tfoot class="checkout__totals-footer">
+                                <tr>
+                                    <th>Total</th>
+                                    <td>{{ cart.total$|async|currencyFormat }}</td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                                
+                            <div class="payment-methods">
+                                <ul class="payment-methods__list"  >
+                                    <li class="payment-methods__item payment-methods__item--active" *ngIf="this.Store.configuracionSitio.PasarelaTranferenciaBancaria" >
+                                        <label class="payment-methods__item-header">
+                                                <span class="payment-methods__item-radio input-radio">
+                                                    <span class="input-radio__body">
+                                                        <input class="input-radio__input" value="Transferencia"  formControlName="Pasarela" name="Pasarela" type="radio" checked>
+                                                        <span class="input-radio__circle"></span>
+                                                    </span>
+                                                </span>
+                                            <span class="payment-methods__item-title">
+                                                Transferencia bancaria directa</span>
+                                        </label>
+                                        <div class="payment-methods__item-container">
+                                            <div class="payment-methods__item-description text-muted" [innerHTML]="paymenthText"></div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="payment-methods__item" *ngIf="this.Store.configuracionSitio.PasaleraContraEntrega">
+                                        <label class="payment-methods__item-header">
+                                                <span class="payment-methods__item-radio input-radio">
+                                                    <span class="input-radio__body">
+                                                        <input class="input-radio__input"  value="ContraEntrega" formControlName="Pasarela"  name="Pasarela" type="radio">
+                                                        <span class="input-radio__circle"></span>
+                                                    </span>
+                                                </span>
+                                            <span class="payment-methods__item-title">Contra-Entrega</span>
+                                        </label>
+                                        <div class="payment-methods__item-container">
+                                            <div class="payment-methods__item-description text-muted">
+                                                Pague en efectivo al momento de la entrega.
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <li class="payment-methods__item" *ngIf="this.Store.configuracionSitio.PasaleraPSE">
+                                        <label class="payment-methods__item-header">
+                                                <span class="payment-methods__item-radio input-radio">
+                                                    <span class="input-radio__body">
+                                                        <input class="input-radio__input" value="PSE" formControlName="Pasarela"  name="Pasarela" type="radio">
+                                                        <span class="input-radio__circle"></span>
+                                                    </span>
+                                                </span>
+                                            <span class="payment-methods__item-title">PSE</span>
+                                        </label>
+                                        <div class="payment-methods__item-container">
+                                            <div class="payment-methods__item-description text-muted">
+                                                
+                                            Pague a través de PSE; puede pagar con su tarjeta de crédito o tarjeta Debito
+                                            </div>
+                                        </div>
+                                    </li>
+
+
+                                </ul>
+                            </div>
+
+                            <div class="checkout__agree form-group">
+                                <div class="form-check">
+                                        <span class="form-check-input input-check">
+                                            <span class="input-check__body">
+                                                <input class="input-check__input" formControlName="Terminos" type="checkbox" id="checkout-terms">
+                                                <span class="input-check__box"></span>
+                                                <svg class="input-check__icon" width="9px" height="7px"><use xlink:href="assets/images/sprite.svg#check-9x7"></use></svg>
+                                            </span>
+                                        </span>
+                                    <label class="form-check-label" for="checkout-terms">
+                                        He leído y estoy de acuerdo con el sitio web. <a target="_blank" [routerLink]="root.terms()">Términos y condiciones</a>*
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group mt-3 mb-0">
+                                <button 
+                                type="submit" 
+                                [disabled]="loading" 
+                                class="btn btn-primary btn-xl btn-block">
+                                <i *ngIf="!loading"> Realizar pedido </i>
+                                <i *ngIf="loading"> Enviando.... </i>
+                                </button>
+                            </div><br>
+        
+
+                            <div class="alert alert-danger" *ngIf="mensajerespuestaerror.length>0" role="alert">
+                                {{mensajerespuestaerror}}
+                            </div>
+                            <div class="alert alert-success" *ngIf="mensajerespuestaexito.length>0" role="alert">
+                                {{mensajerespuestaexito}}
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>

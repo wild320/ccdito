@@ -1,0 +1,116 @@
+<div class="search__body">
+    <form [formGroup]="form" class="search__form" novalidate>
+        <input
+            class="search__input"
+            name="search"
+            placeholder="Buscar productos"
+            aria-label="Site search"
+            type="text"
+            autocomplete="off"
+            formControlName="query"
+            (keydown.escape)="escape.next()"
+            (focus)="openSuggestion()"
+            #input
+        >
+        <button class="search__button search__button--type--submit" type="submit" aria-label="Buscar Productos">
+            <app-icon name="search-20" size="20"></app-icon>
+        </button>
+        <button
+            *ngIf="location === 'mobile-header'"
+            class="search__button search__button--type--close"
+            type="button"
+            (click)="closeButtonClick.next()"
+        >
+            <app-icon name="cross-20" size="20"></app-icon>
+        </button>
+        <div class="search__border"></div>
+    </form>
+
+    <div class="search__suggestions suggestions suggestions--location--{{ location }}">
+
+        <ul class="suggestions__list">
+            <li *ngFor="let product of suggestedProducts; index as key" class="suggestions__item" [ngClass]="{'d-none' : !(key >= optionPagination.first && key <= optionPagination.last)}">
+                <div class="suggestions__item-image product-image">
+                    <div class="product-image__body">
+                        <img class="product-image__img" [src]="product.images[0]" [alt]="product.name" [ngClass]="{'imagen' : product.availability === 'No Disponible' && !StoreSvc.configuracionSitio.SuperarInventario}"  loading="lazy">
+                    </div>
+                </div>
+
+                <div class="suggestions__item-info">
+                    <a [routerLink]="root.product(product.id,product.urlAmigable)" class="suggestions__item-name" (click)="closeSuggestion()">
+                    {{ product.name | titlecase }}
+                    </a>
+                    <div class="suggestions__item-meta">SKU: {{ product.sku }}</div>
+                </div>
+                <div class="suggestions__item-price" *ngIf="showPrice()">
+                    {{ product.price|currencyFormat }}
+                </div>
+                <div class="suggestions__item-price">
+                </div>
+                <div class="product__actions-item">
+                    <app-input-number id="product.id" style="width:90px" aria-label="Quantity" class="product__quantity" size="lg" [min]="1" [formControl]="quantity"></app-input-number>
+
+                    <div *ngIf="location === 'mobile-header'" class="suggestions__item-actions-mobile">
+                        <button
+                             [disabled]="product.availability === 'No Disponible' && !StoreSvc.configuracionSitio.SuperarInventario"
+                            type="button"
+                            title="Add to cart"
+                            class="btn btn-primary btn-sm btn-svg-icon"
+                            [class.btn-loading]="addedToCartProducts.includes(product)"
+                            (click)="addToCart(product)"
+                        >
+                            <app-icon name="cart-16" size="16"></app-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <div *ngIf="location === 'header'" class="suggestions__item-actions">
+                    <button
+                         [disabled]="product.availability === 'No Disponible' && !StoreSvc.configuracionSitio.SuperarInventario"
+                        type="button"
+                        title="Add to cart"
+                        class="btn btn-primary btn-sm btn-svg-icon"
+                        [class.btn-loading]="addedToCartProducts.includes(product)"
+                        (click)="addToCart(product)"
+                    >
+                        <app-icon name="cart-16" size="16"></app-icon>
+                    </button>
+                </div>
+            </li>
+            <div class="posts-view__pagination">
+                <nav aria-label="Page navigation example" *ngIf="optionPagination.total > optionPagination.totalPage">
+                    <ul class="pagination justify-content-end">
+                        <li class="page-item">
+                        <a
+                            class="page-link"
+                            [ngClass]="{'disabled' : optionPagination.page === 1}"
+                            href="#"
+                            (click)="changePageSize($event,'previous')"
+                        >
+                            <
+                        </a>
+                        </li>
+                        <li class="page-item" *ngFor="let i of optionPagination.pageArr">
+                        <a
+                            class="page-link"
+                            [ngClass]="{'active' : optionPagination.page == i}"
+                            href="#"
+                            (click)="changePageSize($event,i)"
+                        >{{ i }}</a>
+                        </li>
+                        <li class="page-item">
+                        <a
+                            class="page-link"
+                            href="#"
+                            [ngClass]="{'disabled' : optionPagination.page == optionPagination.totalPage}"
+                            (click)="changePageSize($event,'next')"
+                        >
+                            >
+                        </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </ul>
+    </div>
+</div>

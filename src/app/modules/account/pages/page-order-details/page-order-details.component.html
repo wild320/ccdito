@@ -1,0 +1,96 @@
+<div class="card">
+    <div class="order-header" >
+        <div class="order-header__actions" >
+            <a routerLink="/account/orders" class="btn btn-xs btn-secondary" >Regresar a la lista</a>
+            <a class="btn btn-xs btn-danger" *ngIf="pedidosvc.ordenactual?.estado=='PENDIENTE'" style="display: block; margin-top: 15px; color:white" (click)="anularPedido(pedidosvc.ordenactual)"> Anular pedido </a>
+        </div>
+        <a class="btn btn-xs btn-primary" (click)="optionTracking()"  style="color:white">Seguimiento </a>
+        <h5 class="order-header__title">Pedido #{{ pedidosvc.ordenactual?.pedido }}</h5>
+        <div class="order-header__subtitle">
+            fue realizado el <mark class="order-header__date">{{ pedidosvc.ordenactual?.fecha }}</mark>
+            y esta actualmente <mark class="order-header__status">{{ pedidosvc.ordenactual?.estado }}</mark>.
+        </div>
+    </div>
+    <div class="card-divider"></div>
+    <div class="card-table">
+        <div class="table-responsive-sm">
+            <table>
+                <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Total</th>
+                </tr>
+                </thead>
+                <tbody class="card-table__body card-table__body--merge-rows">
+                <tr *ngFor="let item of pedidosvc.ordenactual?.items">
+                    <td>{{ item.nombre | titlecase }} × {{ item.cantidad }}</td>
+                    <td>{{ item.total| currencyFormat }}</td>
+                </tr>
+                </tbody>
+                <tbody *ngIf="pedidosvc.ordenactual?.lineasAdicionales.length > 0" class="card-table__body card-table__body--merge-rows">
+                <tr>
+                    <th>Subtotal</th>
+                    <td>{{ pedidosvc.ordenactual?.subtotal|currencyFormat }}</td>
+                </tr>
+                <tr *ngFor="let line of pedidosvc.ordenactual?.lineasAdicionales">
+                    <th>{{ line.clave }}</th>
+                    <td>{{ line.valor|currencyFormat }}</td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th>Total</th>
+                    <td>{{ pedidosvc.ordenactual?.total|currencyFormat }}</td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3 no-gutters mx-n2">
+    <div class="col-sm-6 col-12 px-2">
+        <div class="card address-card address-card--featured">
+            <div class="address-card__body">
+                <div class="address-card__badge address-card__badge--muted">Dirección de Envio</div>
+                <div class="address-card__name">{{ pedidosvc.ordenactual?.direccionEnvio?.nombres + ' ' + pedidosvc.ordenactual?.direccionEnvio?.apellidos | titlecase}}</div>
+                <div class="address-card__row">
+                    {{ pedidosvc.ordenactual?.direccionEnvio?.pais | titlecase }}<br>
+                    {{ pedidosvc.ordenactual?.direccionEnvio?.ciudad  | titlecase}}<br>
+                    {{ pedidosvc.ordenactual?.direccionEnvio?.direccion | titlecase }}
+                </div>
+                <div class="address-card__row">
+                    <div class="address-card__row-title">Numero de Teléfono</div>
+                    <div class="address-card__row-content">{{ pedidosvc.ordenactual?.direccionEnvio?.telefono }}</div>
+                </div>
+                <div class="address-card__row">
+                    <div class="address-card__row-title">Correo Electrónico</div>
+                    <div class="address-card__row-content">{{ pedidosvc.ordenactual?.direccionEnvio?.correo }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-12 px-2 mt-sm-0 mt-3">
+        <div class="card address-card address-card--featured">
+            <div class="address-card__body">
+                <div class="address-card__badge address-card__badge--muted">Dirección Principal</div>
+                <div class="address-card__name">{{ pedidosvc.ordenactual?.direccionPrincipal?.nombres + ' ' + pedidosvc.ordenactual?.direccionPrincipal?.apellidos | titlecase}}</div>
+                <div class="address-card__row">
+                    {{ pedidosvc.ordenactual?.direccionPrincipal?.pais | titlecase}}<br>
+                    {{ pedidosvc.ordenactual?.direccionPrincipal?.ciudad | titlecase}}<br>
+                    {{ pedidosvc.ordenactual?.direccionPrincipal?.direccion | titlecase }}
+                </div>
+                <div class="address-card__row">
+                    <div class="address-card__row-title">Numero de Teléfono</div>
+                    <div class="address-card__row-content">{{ pedidosvc.ordenactual?.direccionPrincipal?.telefono }}</div>
+                </div>
+                <div class="address-card__row">
+                    <div class="address-card__row-title">Correo Electrónico</div>
+                    <div class="address-card__row-content">{{ pedidosvc.ordenactual?.direccionPrincipal?.correo }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,44 @@
+<div class="product-image product-gallery__carousel-item">
+    <div class="product__content">
+        <div *ngFor="let item of items">
+            <lib-ngx-image-zoom
+                [thumbImage]="item.image"
+                [fullImage]="item.image"
+                [magnification]="2"
+                [enableScrollZoom]="true"
+                [lensWidth]="200"
+                style="width: 100%; height: 100%;"
+            ></lib-ngx-image-zoom>
+        </div>
+    </div>
+</div>
+
+<div class="product-gallery__carousel">
+    <owl-carousel-o
+        appOwlPreventClick
+        [options]="thumbnailsCarouselOptions"
+        [appFakeSlides]="items.length"
+        #fakeSlides="appFakeSlides"
+        #thumbnailsCarousel
+    >
+        <ng-template *ngFor="let item of items" carouselSlide [id]="item.id">
+            <div
+                appClick
+                class="product-image product-gallery__carousel-item"
+                [class.product-gallery__carousel-item--active]="item === currentItem"
+                (click)="onThumbnailImageClick(item)"
+            >
+                <div class="product-image__body">
+                    <img
+                        class="product-image__img product-gallery__carousel-image"
+                        [src]="item.image"
+                        [alt]="item.name"
+                        loading="lazy"
+                    />
+                </div>
+            </div>
+        </ng-template>
+
+        <ng-template *ngFor="let i of fakeSlides.slides" carouselSlide [id]="'fake-slide-' + i"></ng-template>
+    </owl-carousel-o>
+</div>

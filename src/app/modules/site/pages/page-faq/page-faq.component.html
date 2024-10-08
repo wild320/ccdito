@@ -1,0 +1,12 @@
+<app-page-header [header]="'Preguntas frecuentes'" [breadcrumbs]="[
+    {label: 'Inicio',                        url: '../../'},
+    {label: 'Preguntas frecuentes',  url: ''}
+]"></app-page-header>
+
+<div class="block faq">
+    <div class="container">
+
+        <div [innerHTML]="pagina.faqs"></div>
+
+    </div>
+</div>

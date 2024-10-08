@@ -1,0 +1,65 @@
+<div class="dashboard">
+    <div class="dashboard__profile card profile-card">
+        <div class="card-body profile-card__body">
+            <div class="profile-card__avatar">
+                <img src="./assets/images/avatars/avatar-3.jpg" alt="avatar"  loading="lazy">
+            </div>
+            <div class="profile-card__name">{{usuariosvc?.razonsocial| titlecase}}</div>
+            <div class="profile-card__email">{{usuariosvc?.correo}}</div>
+            <div class="profile-card__edit">
+                <a routerLink="../profile" class="btn btn-secondary btn-sm">Editar Perfil</a>
+            </div> 
+        </div>
+    </div>
+    <div class="dashboard__address card address-card address-card--featured">
+        <div class="address-card__badge" *ngIf="usuariosvc?.addresses?.length > 0 && usuariosvc?.addresses[0]?.default">Dirección Predeterminada</div>
+        <div class="address-card__body">
+            <div class="address-card__name"*ngIf="usuariosvc?.addresses?.length > 0">{{ usuariosvc?.addresses[0]?.nombres + ' ' + usuariosvc?.addresses[0]?.apellidos | titlecase}}</div>
+            <div class="address-card__row" *ngIf="usuariosvc?.addresses?.length > 0">
+                {{ usuariosvc?.addresses[0]?.pais | titlecase }}<br>
+                {{ usuariosvc?.addresses[0]?.estado | titlecase}} <a *ngIf="usuariosvc?.addresses && usuariosvc?.addresses[0]?.Id>0"> - </a>  {{ usuariosvc?.addresses[0]?.ciudad | titlecase}}<br>
+                {{ usuariosvc?.addresses[0]?.direccion | titlecase}}
+            </div>
+            <div class="address-card__row">
+                <div class="address-card__row-title">Telefono</div>
+                <div class="address-card__row-content" *ngIf="usuariosvc?.addresses?.length > 0">{{ usuariosvc?.addresses[0]?.telefono }}</div>
+            </div>
+            <div class="address-card__row">
+                <div class="address-card__row-title">Correo Electrónico</div>
+                <div class="address-card__row-content">{{ usuariosvc?.addresses[0]?.correo }}</div>
+            </div>
+            <div class="address-card__footer">
+                <a *ngIf="usuariosvc?.addresses && usuariosvc?.addresses[0]?.Id>0" [routerLink]="'/account/addresses/' + usuariosvc?.addresses[0]?.Id ">Editar Dirección</a>
+                <a *ngIf="usuariosvc?.addresses && usuariosvc?.addresses[0]?.Id==0"[routerLink]="'/account/addresses/' + usuariosvc?.addresses[0]?.Id ">Agregar Dirección</a>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard__orders card">
+        <div class="card-header">
+            <h5>Pedidos Recientes</h5>
+        </div>
+        <div class="card-divider"></div>
+        <div class="card-table">
+            <div class="table-responsive-sm">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Pedido</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let order of pedidosvc?.orders">
+                        <td><a [routerLink]="'/account/orders/' + order?.pedido">#{{ order?.pedido }}</a></td>
+                        <td>{{ order?.fecha }}</td>
+                        <td>{{ order?.estado | titlecase }}</td>
+                        <td>{{ order?.total|currencyFormat }} por {{ order?.cantidadArticulos }} Item(s)</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+<app-page-header [header]="'Comparar'" [breadcrumbs]="[
+    {label: 'Inicio',       url: '/'},
+    {label: 'Comparar', url: ''}
+]"></app-page-header>
+
+<div class="block block-empty" *ngIf="!products.length">
+    <div class="container">
+        <div class="block-empty__body">
+            <div class="block-empty__message">¡No has escogido ninguno de los productos para compararlos!</div>
+            <div class="block-empty__actions">
+                <a routerLink="/" class="btn btn-primary btn-sm">Continue</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="block" *="products.length">
+    <div class="container">
+        <div class="table-responsive">
+            <table class="compare-table">
+                <tbody>
+                <tr>
+                    <th>Producto</th>
+                    <td *ngFor="let product of products">
+                        <a [routerLink]="root.product(product.id,product.urlAmigable)" class="compare-table__product-link">
+                            <div *ngIf="product.images?.length" class="compare-table__product-image product-image">
+                                <div class="product-image__body">
+                                    <img class="product-image__img" [src]="product.images[0]" alt=""  [ngClass]="{'imagen' : product.availability === 'No Disponible'  &&  product.availability === 'No Disponible' && !this.storeSvc.configuracionSitio.SuperarInventario}"  loading="lazy">
+                                </div>
+                            </div>
+                            <div class="compare-table__product-name">{{ product.name| titlecase }}</div>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Clasificación</th>
+                    <td *ngFor="let product of products">
+                        <div class="compare-table__product-rating">
+                            <app-rating [value]="product.rating"></app-rating>
+                        </div>
+                        <div class="compare-table__product-rating-legend">
+                            {{ product.reviews }} Comentarios
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Disponibilidad</th>
+                    <td *ngFor="let product of products">
+                        <span *ngIf="product.availability === 'Disponible'" class="text-success">{{product.availability}}</span>
+                        <span *ngIf="product.availability === 'No Disponible'" class="text-danger">{{product.availability}}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Precio</th>
+                    <td *ngFor="let product of products">{{ product.price|currencyFormat }}</td>
+                </tr>
+                <tr>
+                    <th>Agregar al Carrito</th>
+                    <td *ngFor="let product of products">
+                        <button class="btn btn-primary"  [disabled]=" product.availability === 'No Disponible'  &&  product.availability === 'No Disponible' && !this.storeSvc.configuracionSitio.SuperarInventario" (click)="addToCart(product)" [ngClass]="{'btn-loading': addedToCartProducts.includes(product)}">Agregar al Carrito</button>
+                    </td>
+                </tr>
+                <tr *ngFor="let feature of features">
+                    <th>{{ feature.name }}</th>
+                    <td *ngFor="let product of products">{{ feature.values[product.id] || '—' }}</td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td *ngFor="let product of products">
+                        <button class="btn btn-secondary btn-sm" (click)="remove(product)" [ngClass]="{'btn-loading': removedProducts.includes(product)}">Eliminar</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

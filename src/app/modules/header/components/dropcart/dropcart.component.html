@@ -1,0 +1,88 @@
+<!-- .dropcart -->
+<div [class]="{
+    dropcart: true,
+    'dropcart--style--dropdown': type === 'dropdown',
+    'dropcart--style--offcanvas': type === 'offcanvas',
+    'dropcart--open': state.isOpen$|async
+}">
+    <div *ngIf="type === 'offcanvas'" class="dropcart__backdrop" (click)="close()"></div>
+    <div class="dropcart__body">
+        <div *ngIf="type === 'offcanvas'" class="dropcart__header">
+            <div class="dropcart__title">Shopping Cart</div>
+            <button class="dropcart__close" type="button" (click)="close()">
+                <app-icon name="cross-12" size="12"></app-icon>
+            </button>
+        </div>
+
+        <div class="dropcart__empty" *ngIf="!(cart.items$|async).length">
+            Su carro esta vacio!
+        </div>
+        <ng-container *ngIf="(cart.items$|async).length">
+            <div class="dropcart__products-list">
+                <div *ngFor="let item of cart.items$|async" class="dropcart__product">
+                    <div class="dropcart__product-image product-image">
+                        <a
+                            *ngIf="item.product.images?.length"
+                            class="product-image__body"
+                            [routerLink]="root.product(item.product.id,item.product.urlAmigable)"
+                            (click)="closeMenu.emit()"
+                        >
+                            <img class="product-image__img" [src]="item.product.images[0]"  alt="">
+                        </a>
+                    </div>
+                    <div class="dropcart__product-info">
+                        <div class="dropcart__product-name">
+                            <a [routerLink]="root.product(item.product.id,item.product.urlAmigable)" (click)="closeMenu.emit()">{{ item.product.name | titlecase}}</a>
+                        </div>
+
+                        <ul *ngIf="item.options.length" class="dropcart__product-options">
+                            <li *ngFor="let option of item.options">{{ option.name  }}: {{ option.value }}</li>
+                        </ul>
+                        <div class="dropcart__product-meta" *ngIf="storeSvc.configuracionSitio.MostrarPreciosSinLogueo || islogged === true">
+                            <span class="dropcart__product-quantity">{{ item.quantity }}</span> ×
+                            <span class="dropcart__product-price">{{ item.product.price|currency }}</span>
+                        </div>
+                    </div>
+
+                    <button type="button" class="dropcart__product-remove btn btn-light btn-sm btn-svg-icon" (click)="remove(item)" [ngClass]="{'btn-loading': removedItems.includes(item)}">
+                        <app-icon name="cross-10" size="10"></app-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div class="dropcart__totals">
+                <table *ngIf="storeSvc.configuracionSitio.MostrarPreciosSinLogueo || islogged === true">
+                    <tr *ngIf="(cart.totals$|async).length">
+                        <th>Subtotal</th>
+                        <td>{{ cart.subtotal$|async|currency }}</td>
+                    </tr>
+                    <tr>
+                        <th>Descuentos</th>
+                        <td>{{ cart.discounts$|async|currency }}</td>
+                    </tr>
+
+                    <tr *ngFor="let total of cart.totals$|async">
+                        <th>{{ total.title }}</th>
+                        <td>{{ total.price|currency  }}</td>
+                    </tr>
+                    <tr>
+                        <th>Total</th>
+                        <td>{{ cart.total$|async|currency }}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="dropcart__buttons">
+                <ng-container *ngIf="islogged === true; else mensajeInicioSesion">
+                    <!-- Si está logueado, muestra el botón de pago -->
+                    <a class="btn btn-secondary" [routerLink]="root.cart()" (click)="closeMenu.emit()">Finalizar Pedido</a>
+                </ng-container>
+                <!-- Si no está logueado, muestra un mensaje para iniciar sesión -->
+                <ng-template #mensajeInicioSesion>
+                    <p style="text-align: center;">Debes iniciar sesión para continuar con la finalizacion del pedido.</p>
+                </ng-template>
+            </div>
+        </ng-container>
+    </div>
+</div>
+<!-- .dropcart / end -->

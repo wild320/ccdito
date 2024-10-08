@@ -1,0 +1,32 @@
+<div class="card">
+    <div class="card-header">
+        <h5>Historial de Pedidos</h5>
+    </div>
+    <div class="card-divider"></div>
+    <div class="card-table">
+        <div class="table-responsive-sm">
+            <table>
+                <thead>
+                <tr>
+                    <th>Pedido</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let order of pedidosvc.orders">
+                    <td><a [routerLink]="'/account/orders/' + order.pedido">#{{ order.pedido }}</a></td>
+                    <td>{{ order.fecha }}</td>
+                    <td>{{ order.estado | titlecase  }}</td>
+                    <td>{{ order.total|currencyFormat }} por {{ order.cantidadArticulos }} Item(s)</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-divider"></div> 
+    <div class="card-footer">
+        <app-pagination [total]="pedidosvc.NumeroPaginas" (pageChange)= "CambioPagina($event)"></app-pagination>
+    </div>
+</div>
