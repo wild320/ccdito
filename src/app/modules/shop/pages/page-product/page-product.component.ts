@@ -46,8 +46,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.title.setTitle(`${this.productoFICI.nombre} - Demo Carro Mágico`);
 
-        const baseHref = `${document.baseURI}`;
-
         // Añadir meta tags dinámicos
         this.meta.addTags([
           { name: 'description', content: `${this.productoFICI.nombre} - ${this.productoFICI.descripcion}. Solo por ${this.productoFICI.precio} USD.` },
