@@ -124,9 +124,9 @@ export class AppComponent implements OnInit {
         const { configuracionSitio, redes } = this.StoreSvc;
         
         if (configuracionSitio) {
-            const siteName = this.negocio.configuracion.NombreCliente;
-            const description = configuracionSitio.PosicionamientoEnGoogle;
-            const imageUrl = document.location.href + '/assets/configuracion/LOGO2.png';
+            const siteName = "wildemo";
+            const description = "wildemo";
+            const imageUrl = "https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO2.png";
             const twitterHandle = '@' + (redes[1]?.url || 'defaultTwitterHandle'); 
     
             this.metaTagService.addTags([
