@@ -121,53 +121,53 @@ export class AppComponent implements OnInit {
     }
 
     private setMetaTags(): void {
-        const { configuracionSitio, redes } = this.StoreSvc;
+        // const { configuracionSitio, redes } = this.StoreSvc;
         
-        if (configuracionSitio) {
-            const siteName = "wildemo";
-            const description = "wildemo";
-            const imageUrl = "https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO2.png";
-            const twitterHandle = '@' + (redes[1]?.url || 'defaultTwitterHandle'); 
+        if (true) {
+            const siteName = "OTRA MAS";
+            // const description = "wildemo";
+            // const imageUrl = "https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO2.png";
+            // const twitterHandle = '@' + ( 'defaultTwitterHandle'); 
     
             this.metaTagService.addTags([
                 // Meta generales
-                { name: 'description', content: description },
-                { name: 'author', content: configuracionSitio.email },
-                { name: 'address', content: configuracionSitio.address },
-                { name: 'phone', content: configuracionSitio.phone },
-                { name: 'hours', content: configuracionSitio.hours },
+                { name: 'description', content: "FORZADO NAME" },
+                // { name: 'author', content: configuracionSitio.email },
+                // { name: 'address', content: configuracionSitio.address },
+                // { name: 'phone', content: configuracionSitio.phone },
+                // { name: 'hours', content: configuracionSitio.hours },
     
                 // Meta para redes sociales (Open Graph)
                 { property: 'og:title', content: "forzado" },
                 { property: 'og:description', content: "description forzado" },
                 { property: 'og:type', content: 'website' },
-                { property: 'og:url', content: document.location.href },
+                { property: 'og:url', content: "WWW.MAGICOMUNDO.CO" },
                 { property: 'og:image', content: "https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO.png" },
                 { property: 'og:image:width', content: '1200' },
                 { property: 'og:image:height', content: '630' }, // Imagen optimizada para redes sociales
-                { property: 'og:email', content: configuracionSitio.email },
-                { property: 'og:phone_number', content: configuracionSitio.phone },
-                { property: 'og:address', content: configuracionSitio.address },
-                { property: 'og:hours', content: configuracionSitio.hours },
-                { property: 'og:site_name', content: siteName },
+                // { property: 'og:email', content: configuracionSitio.email },
+                // { property: 'og:phone_number', content: configuracionSitio.phone },
+                // { property: 'og:address', content: configuracionSitio.address },
+                // { property: 'og:hours', content: configuracionSitio.hours },
+                // { property: 'og:site_name', content: siteName },
     
-                // Meta para WhatsApp o contacto
-                { name: 'contact:phone_number', content: configuracionSitio.NumeroWpp?.toString() || '' },
+                // // Meta para WhatsApp o contacto
+                // { name: 'contact:phone_number', content: configuracionSitio.NumeroWpp?.toString() || '' },
     
-                // Meta para Twitter
-                { name: 'twitter:card', content: 'summary_large_image' },
-                { name: 'twitter:site', content: twitterHandle },
-                { name: 'twitter:creator', content: twitterHandle },
-                { name: 'twitter:title', content: siteName },
-                { name: 'twitter:description', content: description },
-                { name: 'twitter:image', content: imageUrl },
+                // // Meta para Twitter
+                // { name: 'twitter:card', content: 'summary_large_image' },
+                // { name: 'twitter:site', content: twitterHandle },
+                // { name: 'twitter:creator', content: twitterHandle },
+                // { name: 'twitter:title', content: siteName },
+                // { name: 'twitter:description', content: description },
+                // { name: 'twitter:image', content: imageUrl },
     
-                // Meta para Facebook
-                { property: 'fb:app_id', content: redes[1]?.url || 'defaultAppId' },
-                { property: 'fb:pages', content: redes[1]?.url || 'defaultPageId' },
+                // // Meta para Facebook
+                // { property: 'fb:app_id', content: redes[1]?.url || 'defaultAppId' },
+                // { property: 'fb:pages', content: redes[1]?.url || 'defaultPageId' },
                 
-                // Meta para Instagram
-                { name: 'instagram:username', content: 'magicomundo.co' },
+                // // Meta para Instagram
+                // { name: 'instagram:username', content: 'magicomundo.co' },
             ]);
     
             this.titleService.setTitle(siteName);
