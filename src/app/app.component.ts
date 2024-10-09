@@ -122,56 +122,60 @@ export class AppComponent implements OnInit {
 
     private setMetaTags(): void {
         const { configuracionSitio, redes } = this.StoreSvc;
-        // Validar que configuracionSitio esté definido antes de agregar las meta tags
+        
         if (configuracionSitio) {
+            const siteName = this.negocio.configuracion.NombreCliente;
+            const description = configuracionSitio.PosicionamientoEnGoogle;
+            const imageUrl = document.location.href + '/assets/configuracion/LOGO2.png';
+            const twitterHandle = '@' + (redes[1]?.url || 'defaultTwitterHandle'); 
+    
             this.metaTagService.addTags([
                 // Meta generales
-                { name: 'description', content: configuracionSitio.PosicionamientoEnGoogle  },
-                { name: 'author', content: configuracionSitio.email  },
-                { name: 'address', content: configuracionSitio.address  },
-                { name: 'phone', content: configuracionSitio.phone  },
-                { name: 'hours', content: configuracionSitio.hours  },
-
+                { name: 'description', content: description },
+                { name: 'author', content: configuracionSitio.email },
+                { name: 'address', content: configuracionSitio.address },
+                { name: 'phone', content: configuracionSitio.phone },
+                { name: 'hours', content: configuracionSitio.hours },
+    
                 // Meta para redes sociales (Open Graph)
-                { property: 'og:title', content: this.negocio.configuracion.NombreCliente },
-                { property: 'og:description', content: configuracionSitio.PosicionamientoEnGoogle  },
+                { property: 'og:title', content: siteName },
+                { property: 'og:description', content: description },
                 { property: 'og:type', content: 'website' },
                 { property: 'og:url', content: document.location.href },
-                { property: 'og:image', content: document.location.href + '/assets/configuracion/LOGO2.png' }, 
-                { property: 'og:email', content: configuracionSitio.email  },
-                { property: 'og:phone_number', content: configuracionSitio.phone  },
-                { property: 'og:address', content: configuracionSitio.address  },
-                { property: 'og:hours', content: configuracionSitio.hours  },
-
+                { property: 'og:image', content: imageUrl },
+                { property: 'og:image:width', content: '1200' },
+                { property: 'og:image:height', content: '630' }, // Imagen optimizada para redes sociales
+                { property: 'og:email', content: configuracionSitio.email },
+                { property: 'og:phone_number', content: configuracionSitio.phone },
+                { property: 'og:address', content: configuracionSitio.address },
+                { property: 'og:hours', content: configuracionSitio.hours },
+                { property: 'og:site_name', content: siteName },
+    
                 // Meta para WhatsApp o contacto
-                { name: 'contact:phone_number', content: configuracionSitio.NumeroWpp.toString()  },
-
+                { name: 'contact:phone_number', content: configuracionSitio.NumeroWpp?.toString() || '' },
+    
                 // Meta para Twitter
-                { name: 'twitter:card', content:'summary_large_image' },
-                { name: 'twitter:site', content: '@' + redes[1].url  },
-                { name: 'twitter:creator', content: '@' + redes[1].url  },
-                { name: 'twitter:title', content: this.negocio.configuracion.NombreCliente },
-                { name: 'twitter:description', content: configuracionSitio.PosicionamientoEnGoogle  },
-                { name: 'twitter:image', content: document.location.href + '/assets/configuracion/LOGO2.png' }, // Cambiar si tienes una imagen representativa
-
+                { name: 'twitter:card', content: 'summary_large_image' },
+                { name: 'twitter:site', content: twitterHandle },
+                { name: 'twitter:creator', content: twitterHandle },
+                { name: 'twitter:title', content: siteName },
+                { name: 'twitter:description', content: description },
+                { name: 'twitter:image', content: imageUrl },
+    
                 // Meta para Facebook
-                { property: 'fb:app_id', content: redes[1].url  },
-                { property: 'fb:pages', content: redes[1].url  },
-                { property: 'og:site_name', content: this.negocio.configuracion.NombreCliente },
-                { property: 'og:description', content: configuracionSitio.PosicionamientoEnGoogle  },
-                { property: 'og:image', content: document.location.href + '/assets/configuracion/LOGO2.png' },
-
-                // Meta para instagram
+                { property: 'fb:app_id', content: redes[1]?.url || 'defaultAppId' },
+                { property: 'fb:pages', content: redes[1]?.url || 'defaultPageId' },
+                
+                // Meta para Instagram
                 { name: 'instagram:username', content: 'magicomundo.co' },
-                { name: 'og:image:width', content: '640' },
-                { name: 'og:image:height', content: '640' },
             ]);
-
-            this.titleService.setTitle(this.negocio.configuracion.NombreCliente);
+    
+            this.titleService.setTitle(siteName);
         } else {
             alert('No se encontró la configuración del sitio.');
         }
     }
+    
 
 }
 
