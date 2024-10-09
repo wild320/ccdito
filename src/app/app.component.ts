@@ -60,6 +60,8 @@ export class AppComponent implements OnInit {
     ) {
 
         this.titleService.setTitle(this.negocio.configuracion.NombreCliente);
+        
+        this.setMetaTags();
 
         if (isPlatformBrowser(this.platformId)) {
             eval(this.StoreSvc?.configuracionSitio?.scriptRastreo)
@@ -76,7 +78,6 @@ export class AppComponent implements OnInit {
                     preloader.classList.add('site-preloader__fade');
                 });
             });
-            // this.setMetaTags();
         }
 
     }
@@ -115,21 +116,21 @@ export class AppComponent implements OnInit {
             this.toastr.success(`Producto "${this.TitleCase(product.name)}" Agregado a la Lista de Deseos!`);
         });
 
-        this.metaTagService.addTags([
-            { name: 'description', content: 'Demo Carro Mágico, la mejor tienda online para encontrar productos mágicos y únicos. Descubre nuestras ofertas.' },
-            { name: 'keywords', content: 'carro mágico, tienda online, ecommerce, productos mágicos, ofertas, compra online' },
-            { name: 'author', content: 'Demo Carro Mágico' },
-            { name: 'robots', content: 'index, follow' },
-            { property: 'og:title', content: 'Demo Carro Mágico - Tienda Online' },
-            { property: 'og:description', content: 'Bienvenido a Demo Carro Mágico, tu tienda de productos mágicos y sorprendentes.' },
-            { property: 'og:type', content: 'website' },
-            { property: 'og:url', content: 'https://copiacarro--magico-mundo.us-central1.hosted.app/' },
-            { property: 'og:image', content: 'https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO2.png' },
-            { name: 'twitter:card', content: 'summary_large_image' },
-            { name: 'twitter:title', content: 'Demo Carro Mágico - Tienda Online de Productos Mágicos' },
-            { name: 'twitter:description', content: 'Explora productos únicos y ofertas especiales en Demo Carro Mágico.' },
-            { name: 'twitter:image', content: 'https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO2.png' },
-          ]);
+        // this.metaTagService.addTags([
+        //     { name: 'description', content: 'Demo Carro Mágico, la mejor tienda online para encontrar productos mágicos y únicos. Descubre nuestras ofertas.' },
+        //     { name: 'keywords', content: 'carro mágico, tienda online, ecommerce, productos mágicos, ofertas, compra online' },
+        //     { name: 'author', content: 'Demo Carro Mágico' },
+        //     { name: 'robots', content: 'index, follow' },
+        //     { property: 'og:title', content: 'Demo Carro Mágico - Tienda Online' },
+        //     { property: 'og:description', content: 'Bienvenido a Demo Carro Mágico, tu tienda de productos mágicos y sorprendentes.' },
+        //     { property: 'og:type', content: 'website' },
+        //     { property: 'og:url', content: 'https://copiacarro--magico-mundo.us-central1.hosted.app/' },
+        //     { property: 'og:image', content: 'https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO2.png' },
+        //     { name: 'twitter:card', content: 'summary_large_image' },
+        //     { name: 'twitter:title', content: 'Demo Carro Mágico - Tienda Online de Productos Mágicos' },
+        //     { name: 'twitter:description', content: 'Explora productos únicos y ofertas especiales en Demo Carro Mágico.' },
+        //     { name: 'twitter:image', content: 'https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO2.png' },
+        //   ]);
     }
 
     private setMetaTags(): void {
@@ -156,7 +157,7 @@ export class AppComponent implements OnInit {
                 { property: 'og:phone_number', content: configuracionSitio.phone || '' },
                 { property: 'og:address', content: configuracionSitio.address || '' },
                 { property: 'og:hours', content: configuracionSitio.hours || '' },
-                { property: 'og:image', content: document.location.href + '/assets/configuracion/LOGO.png' }, // Cambiar si tienes una imagen representativa
+                { property: 'og:image', content: document.location.href + '/assets/configuracion/LOGO2.png' }, // Cambiar si tienes una imagen representativa
                 
                 // Meta para WhatsApp o contacto
                 { name: 'contact:phone_number', content: configuracionSitio.NumeroWpp.toString() || '' },
@@ -167,17 +168,17 @@ export class AppComponent implements OnInit {
                 { name: 'twitter:creator', content: '@' + redes[1].url || '' },
                 { name: 'twitter:title', content: this.negocio.configuracion.NombreCliente },
                 { name: 'twitter:description', content: configuracionSitio.PosicionamientoEnGoogle || '' },
-                { name: 'twitter:image', content: document.location.href + '/assets/configuracion/LOGO.png' }, // Cambiar si tienes una imagen representativa
+                { name: 'twitter:image', content: document.location.href + '/assets/configuracion/LOGO2.png' }, // Cambiar si tienes una imagen representativa
                 
                 // Meta para Facebook
                 { property: 'fb:app_id', content: redes[1].url || '' },
                 { property: 'fb:pages', content: redes[1].url || '' },
                 { property: 'og:site_name', content: this.negocio.configuracion.NombreCliente },
                 { property: 'og:description', content: configuracionSitio.PosicionamientoEnGoogle || '' },
-                { property: 'og:image', content: document.location.href + '/assets/configuracion/LOGO.png' },
+                { property: 'og:image', content: document.location.href + '/assets/configuracion/LOGO2.png' },
 
                 // Meta para instagram
-            { name: 'instagram:username', content: 'magicomundo.co' },
+                { name: 'instagram:username', content: 'magicomundo.co' },
                 { name: 'og:image:width', content: '640' },
                 { name: 'og:image:height', content: '640' },
             ]);
