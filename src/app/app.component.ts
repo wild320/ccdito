@@ -42,6 +42,7 @@ import { ShopModule } from './modules/shop/shop.module';
 export class AppComponent implements OnInit {
 
     titles: string = 'DARIO Gomez';
+    urlImage: string = "https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO.png"
 
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
@@ -124,6 +125,7 @@ export class AppComponent implements OnInit {
 
     private setMetaTags(): void {
         // const { configuracionSitio, redes } = this.StoreSvc;
+        const ladescricion = "cuando te perdi"
         
         if (true) {
             const siteName = "OTRA MAS";
@@ -141,10 +143,10 @@ export class AppComponent implements OnInit {
     
                 // Meta para redes sociales (Open Graph)
                 { property: 'og:title', content: "forzado" },
-                { property: 'og:description', content: this.titles },
+                { property: 'og:description', content: ladescricion },
                 { property: 'og:type', content: 'website' },
                 { property: 'og:url', content: "WWW.MAGICOMUNDO.CO" },
-                { property: 'og:image', content: "https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO.png" },
+                { property: 'og:image', content: this.urlImage },
                 { property: 'og:image:width', content: '1200' },
                 { property: 'og:image:height', content: '630' }, // Imagen optimizada para redes sociales
                 // { property: 'og:email', content: configuracionSitio.email },
