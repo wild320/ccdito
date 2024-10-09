@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
 
         this.titleService.setTitle(this.negocio.configuracion.NombreCliente);
         
-        this.setMetaTags();
+      //  this.setMetaTags();
 
         if (isPlatformBrowser(this.platformId)) {
             eval(this.StoreSvc?.configuracionSitio?.scriptRastreo)
