@@ -89,6 +89,9 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        
+
+        this.setMetaTags();
         // properties of the CurrencyFormatOptions interface fully complies
         // with the arguments of the built-in pipe "currency"
         // https://angular.io/api/common/CurrencyPipe
@@ -114,15 +117,13 @@ export class AppComponent implements OnInit {
             this.toastr.success(`Producto "${this.TitleCase(product.name)}" Agregado a la Lista de Deseos!`);
         });
 
-        this.setMetaTags();
-
 
     }
 
     private setMetaTags(): void {
         const { configuracionSitio, redes } = this.StoreSvc;
         // Validar que configuracionSitio esté definido antes de agregar las meta tags
-        if (isPlatformBrowser(this.platformId) && configuracionSitio) {
+        if (configuracionSitio) {
             this.metaTagService.addTags([
                 // Meta generales
                 { name: 'description', content: configuracionSitio.PosicionamientoEnGoogle  },
