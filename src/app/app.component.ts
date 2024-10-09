@@ -136,52 +136,54 @@ export class AppComponent implements OnInit {
 
     private setMetaTags(): void {
         const { configuracionSitio, redes } = this.StoreSvc;
-
-        alert('configuracionSitio')
         // Validar que configuracionSitio esté definido antes de agregar las meta tags
         if (configuracionSitio) {
             this.metaTagService.addTags([
                 // Meta generales
-                { name: 'description', content: configuracionSitio.PosicionamientoEnGoogle || '' },
-                { name: 'author', content: configuracionSitio.email || '' },
-                { name: 'address', content: configuracionSitio.address || '' },
-                { name: 'phone', content: configuracionSitio.phone || '' },
-                { name: 'hours', content: configuracionSitio.hours || '' },
+                { name: 'description', content: configuracionSitio.PosicionamientoEnGoogle  },
+                { name: 'author', content: configuracionSitio.email  },
+                { name: 'address', content: configuracionSitio.address  },
+                { name: 'phone', content: configuracionSitio.phone  },
+                { name: 'hours', content: configuracionSitio.hours  },
     
                 // Meta para redes sociales (Open Graph)
                 { property: 'og:title', content: this.negocio.configuracion.NombreCliente },
-                { property: 'og:description', content: configuracionSitio.PosicionamientoEnGoogle || '' },
+                { property: 'og:description', content: configuracionSitio.PosicionamientoEnGoogle  },
                 { property: 'og:type', content: 'website' },
                 { property: 'og:url', content: document.location.href },
-                { property: 'og:email', content: configuracionSitio.email || '' },
-                { property: 'og:phone_number', content: configuracionSitio.phone || '' },
-                { property: 'og:address', content: configuracionSitio.address || '' },
-                { property: 'og:hours', content: configuracionSitio.hours || '' },
+                { property: 'og:email', content: configuracionSitio.email  },
+                { property: 'og:phone_number', content: configuracionSitio.phone  },
+                { property: 'og:address', content: configuracionSitio.address  },
+                { property: 'og:hours', content: configuracionSitio.hours  },
                 { property: 'og:image', content: document.location.href + '/assets/configuracion/LOGO2.png' }, // Cambiar si tienes una imagen representativa
                 
-                // Meta para WhatsApp o contacto
-                { name: 'contact:phone_number', content: configuracionSitio.NumeroWpp.toString() || '' },
+                // // Meta para WhatsApp o contacto
+                // { name: 'contact:phone_number', content: configuracionSitio.NumeroWpp.toString()  },
                 
-                // Meta para Twitter
-                { name: 'twitter:card', content:'summary_large_image' },
-                { name: 'twitter:site', content: '@' + redes[1].url || '' },
-                { name: 'twitter:creator', content: '@' + redes[1].url || '' },
-                { name: 'twitter:title', content: this.negocio.configuracion.NombreCliente },
-                { name: 'twitter:description', content: configuracionSitio.PosicionamientoEnGoogle || '' },
-                { name: 'twitter:image', content: document.location.href + '/assets/configuracion/LOGO2.png' }, // Cambiar si tienes una imagen representativa
+                // // Meta para Twitter
+                // { name: 'twitter:card', content:'summary_large_image' },
+                // { name: 'twitter:site', content: '@' + redes[1].url  },
+                // { name: 'twitter:creator', content: '@' + redes[1].url  },
+                // { name: 'twitter:title', content: this.negocio.configuracion.NombreCliente },
+                // { name: 'twitter:description', content: configuracionSitio.PosicionamientoEnGoogle  },
+                // { name: 'twitter:image', content: document.location.href + '/assets/configuracion/LOGO2.png' }, // Cambiar si tienes una imagen representativa
                 
-                // Meta para Facebook
-                { property: 'fb:app_id', content: redes[1].url || '' },
-                { property: 'fb:pages', content: redes[1].url || '' },
-                { property: 'og:site_name', content: this.negocio.configuracion.NombreCliente },
-                { property: 'og:description', content: configuracionSitio.PosicionamientoEnGoogle || '' },
-                { property: 'og:image', content: document.location.href + '/assets/configuracion/LOGO2.png' },
+                // // Meta para Facebook
+                // { property: 'fb:app_id', content: redes[1].url  },
+                // { property: 'fb:pages', content: redes[1].url  },
+                // { property: 'og:site_name', content: this.negocio.configuracion.NombreCliente },
+                // { property: 'og:description', content: configuracionSitio.PosicionamientoEnGoogle  },
+                // { property: 'og:image', content: document.location.href + '/assets/configuracion/LOGO2.png' },
 
-                // Meta para instagram
-                { name: 'instagram:username', content: 'magicomundo.co' },
-                { name: 'og:image:width', content: '640' },
-                { name: 'og:image:height', content: '640' },
+                // // Meta para instagram
+                // { name: 'instagram:username', content: 'magicomundo.co' },
+                // { name: 'og:image:width', content: '640' },
+                // { name: 'og:image:height', content: '640' },
             ]);
+
+            
+
+        alert('configuracionSitio')
         } else {
             console.error('No se encontró la configuración del sitio.');
         }
