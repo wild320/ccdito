@@ -41,6 +41,8 @@ import { ShopModule } from './modules/shop/shop.module';
 })
 export class AppComponent implements OnInit {
 
+    titles: string = 'DARIO Gomez';
+
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
         @Inject(DOCUMENT) private document: Document,
@@ -139,7 +141,7 @@ export class AppComponent implements OnInit {
     
                 // Meta para redes sociales (Open Graph)
                 { property: 'og:title', content: "forzado" },
-                { property: 'og:description', content: "description forzado" },
+                { property: 'og:description', content: this.titles },
                 { property: 'og:type', content: 'website' },
                 { property: 'og:url', content: "WWW.MAGICOMUNDO.CO" },
                 { property: 'og:image', content: "https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO.png" },
@@ -163,7 +165,7 @@ export class AppComponent implements OnInit {
                 // { name: 'twitter:image', content: imageUrl },
     
                 // // Meta para Facebook
-                // { property: 'fb:app_id', content: redes[1]?.url || 'defaultAppId' },
+                { property: 'fb:app_id', content: 'defaultAppId' },
                 // { property: 'fb:pages', content: redes[1]?.url || 'defaultPageId' },
                 
                 // // Meta para Instagram
