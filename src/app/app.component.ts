@@ -59,13 +59,11 @@ export class AppComponent implements OnInit {
         private metaTagService: Meta
     ) {
 
-        this.titleService.setTitle(this.negocio.configuracion.NombreCliente);
+        this.titleService.setTitle(this.negocio.configuracion.NombreCliente);    
 
         if (isPlatformBrowser(this.platformId)) {           
         
             eval(this.StoreSvc?.configuracionSitio?.scriptRastreo);
-
-            this.setMetaTags();
 
             this.zone.runOutsideAngular(() => {
                 this.router.events.pipe(filter(event => event instanceof NavigationEnd), first()).subscribe(() => {
@@ -115,7 +113,9 @@ export class AppComponent implements OnInit {
         });
         this.wishlist.onAdding$.subscribe(product => {
             this.toastr.success(`Producto "${this.TitleCase(product.name)}" Agregado a la Lista de Deseos!`);
-        });
+        });            
+
+        this.setMetaTags();
 
         // this.metaTagService.addTags([
         //     { name: 'description', content: 'Demo Carro Mágico, la mejor tienda online para encontrar productos mágicos y únicos. Descubre nuestras ofertas.' },
@@ -138,9 +138,9 @@ export class AppComponent implements OnInit {
         const { configuracionSitio } = this.StoreSvc;
         const { redes } = this.StoreSvc;
 
-    
+        alert('configuracionSitio')
         // Validar que configuracionSitio esté definido antes de agregar las meta tags
-        if (configuracionSitio) {
+        if (configuracionSitio && isPlatformBrowser(this.platformId)) {
             this.metaTagService.addTags([
                 // Meta generales
                 { name: 'description', content: configuracionSitio.PosicionamientoEnGoogle || '' },
