@@ -138,11 +138,11 @@ export class AppComponent implements OnInit {
                 { name: 'hours', content: configuracionSitio.hours },
     
                 // Meta para redes sociales (Open Graph)
-                { property: 'og:title', content: siteName },
-                { property: 'og:description', content: description },
+                { property: 'og:title', content: "forzado" },
+                { property: 'og:description', content: "description forzado" },
                 { property: 'og:type', content: 'website' },
                 { property: 'og:url', content: document.location.href },
-                { property: 'og:image', content: imageUrl },
+                { property: 'og:image', content: "https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO.png" },
                 { property: 'og:image:width', content: '1200' },
                 { property: 'og:image:height', content: '630' }, // Imagen optimizada para redes sociales
                 { property: 'og:email', content: configuracionSitio.email },
