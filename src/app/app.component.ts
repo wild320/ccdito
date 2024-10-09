@@ -60,11 +60,12 @@ export class AppComponent implements OnInit {
     ) {
 
         this.titleService.setTitle(this.negocio.configuracion.NombreCliente);
-        
-      //  this.setMetaTags();
 
-        if (isPlatformBrowser(this.platformId)) {
-            eval(this.StoreSvc?.configuracionSitio?.scriptRastreo)
+        if (isPlatformBrowser(this.platformId)) {           
+        
+            eval(this.StoreSvc?.configuracionSitio?.scriptRastreo);
+
+            this.setMetaTags();
 
             this.zone.runOutsideAngular(() => {
                 this.router.events.pipe(filter(event => event instanceof NavigationEnd), first()).subscribe(() => {
