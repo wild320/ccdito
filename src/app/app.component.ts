@@ -137,11 +137,11 @@ export class AppComponent implements OnInit {
             //     { property: 'og:description', content: configuracionSitio.PosicionamientoEnGoogle  },
             //     { property: 'og:type', content: 'website' },
             //     { property: 'og:url', content: document.location.href },
+            //     { property: 'og:image', content: document.location.href + '/assets/configuracion/LOGO2.png' }, 
             //     { property: 'og:email', content: configuracionSitio.email  },
             //     { property: 'og:phone_number', content: configuracionSitio.phone  },
             //     { property: 'og:address', content: configuracionSitio.address  },
             //     { property: 'og:hours', content: configuracionSitio.hours  },
-            //     { property: 'og:image', content: document.location.href + '/assets/configuracion/LOGO2.png' }, // Cambiar si tienes una imagen representativa
 
             //     // // Meta para WhatsApp o contacto
             //     // { name: 'contact:phone_number', content: configuracionSitio.NumeroWpp.toString()  },
@@ -172,18 +172,26 @@ export class AppComponent implements OnInit {
                 { name: 'keywords', content: 'carro mágico, tienda online, ecommerce, productos mágicos, ofertas, compra online' },
                 { name: 'author', content: 'Demo Carro Mágico' },
                 { name: 'robots', content: 'index, follow' },
-                { property: 'og:title', content: 'Demo Carro Mágico - Tienda Online' },
-                { property: 'og:description', content: 'Bienvenido a Demo Carro Mágico, tu tienda de productos mágicos y sorprendentes.' },
+
+                { property: 'og:title', content: this.negocio.configuracion.NombreCliente },
+                { property: 'og:description', content: configuracionSitio.PosicionamientoEnGoogle  },
                 { property: 'og:type', content: 'website' },
-                { property: 'og:url', content: 'https://copiacarro--magico-mundo.us-central1.hosted.app/' },
-                { property: 'og:image', content: 'https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO2.png' },
+                { property: 'og:url', content: document.location.href },
+                { property: 'og:image', content: document.location.href + '/assets/configuracion/LOGO2.png' }, 
+
+                // { property: 'og:title', content: 'Demo Carro Mágico - Tienda Online' },
+                // { property: 'og:description', content: 'Bienvenido a Demo Carro Mágico, tu tienda de productos mágicos y sorprendentes.' },
+                // { property: 'og:type', content: 'website' },
+                // { property: 'og:url', content: 'https://copiacarro--magico-mundo.us-central1.hosted.app/' },
+                // { property: 'og:image', content: 'https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO2.png' },
+
                 { name: 'twitter:card', content: 'summary_large_image' },
                 { name: 'twitter:title', content: 'Demo Carro Mágico - Tienda Online de Productos Mágicos' },
                 { name: 'twitter:description', content: 'Explora productos únicos y ofertas especiales en Demo Carro Mágico.' },
                 { name: 'twitter:image', content: 'https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO2.png' },
             ]);
 
-            alert('configuracionSitio')
+            alert(document.location.href)
         } else {
             console.error('No se encontró la configuración del sitio.');
         }
