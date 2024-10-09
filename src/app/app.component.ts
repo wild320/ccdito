@@ -135,8 +135,8 @@ export class AppComponent implements OnInit {
     }
 
     private setMetaTags(): void {
-        // const { configuracionSitio } = this.StoreSvc;
-        // const { redes } = this.StoreSvc;
+        const { configuracionSitio, redes } = this.StoreSvc;
+        console.log(configuracionSitio, redes)
 
         alert('configuracionSitio')
         // Validar que configuracionSitio esté definido antes de agregar las meta tags
