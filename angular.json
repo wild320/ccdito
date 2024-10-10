@@ -265,6 +265,9 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "stroyka:build"
+          },
           "configurations": {
             "production": {
               "buildTarget": "stroyka:build:production"

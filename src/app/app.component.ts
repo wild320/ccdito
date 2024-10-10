@@ -66,14 +66,14 @@ export class AppComponent implements OnInit {
     ngOnInit(): void {
         if (isPlatformBrowser(this.platformId)) {
             this.initializeMetaInfo();
+            this.router.events.pipe(filter(event => event instanceof NavigationEnd))
+                .subscribe(() => this.scroller.scrollToPosition([0, 0]));
+    
+            this.subscribeToCartEvents();
+            this.subscribeToCompareEvents();
+            this.subscribeToWishlistEvents();
         }
 
-        this.router.events.pipe(filter(event => event instanceof NavigationEnd))
-            .subscribe(() => this.scroller.scrollToPosition([0, 0]));
-
-        this.subscribeToCartEvents();
-        this.subscribeToCompareEvents();
-        this.subscribeToWishlistEvents();
     }
 
     private initializeTrackingScript(): void {
@@ -103,15 +103,17 @@ export class AppComponent implements OnInit {
     }
 
     private initializeMetaInfo(): void {
-        const { configuracionSitio } = this.storeService;
-        this.title.set(this.negocio.configuracion.NombreCliente || ''); // fallback en caso de que sea undefined
-        this.description.set(configuracionSitio?.PosicionamientoEnGoogle || 'Descripción predeterminada');
-        this.urlImage.set(`${this.document.baseURI}/asset/configuracion/LOGO2.png`);
-        this.urlPublic.set(this.document.baseURI || '');
-
-        this.titleService.setTitle(this.title() || '');
-        this.setMetaTags();
+        if (this.storeService.configuracionSitio) {
+            this.title.set(this.negocio.configuracion.NombreCliente || '[Carro Compras]');
+            this.description.set(this.storeService.configuracionSitio.PosicionamientoEnGoogle || 'Descripción predeterminada');
+            this.urlImage.set(`${this.document.baseURI}/asset/configuracion/LOGO2.png`);
+            this.urlPublic.set(this.document.baseURI || '');
+    
+            this.titleService.setTitle(this.title() || '');
+            this.setMetaTags();
+        }
     }
+    
 
     private subscribeToCartEvents(): void {
         this.cart.onAdding$.subscribe(product => {
