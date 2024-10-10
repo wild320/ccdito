@@ -14,7 +14,7 @@ import { ConfiguracionSitio } from '../../../data/modelos/negocio/ConfiguracionS
 import { SocialLinksItem } from '../../../data/modelos/negocio/RedesSociales';
 import { ClabelRutas, Crutas } from '../../../data/contantes/cRutas';
 import { isPlatformBrowser } from '@angular/common';
-import { firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -22,8 +22,11 @@ import { firstValueFrom } from 'rxjs';
 export class StoreService {
     UrlServicioCarroCompras: string;
     public navigation: NavigationLink[];
-    public configuracionSitio = new ConfiguracionSitio();
     public redes: SocialLinksItem[] = [];
+    private configuracionSitioSubject = new BehaviorSubject<ConfiguracionSitio>(new ConfiguracionSitio());
+    public configuracionSitio$ = this.configuracionSitioSubject.asObservable();
+    configuracionSitio = new ConfiguracionSitio()
+    
 
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
@@ -49,16 +52,18 @@ export class StoreService {
              // las sesiones siempre inician apagagas, la configuracion trae cuales quedan activas
             this.paginaService.iniciarPaginas();
 
+            const newConfig = { ...this.configuracionSitioSubject.value };
+
             configuracion.forEach(({ id, valor }) => {
 
                 switch (id) {
                     // Hora de servicio
                     case 'A1':
-                        this.configuracionSitio.hours = valor;
+                        newConfig.hours = valor;
                         break;
                     // src mapa google
                     case 'A4':
-                        this.configuracionSitio.scrmapa = valor;
+                        newConfig.scrmapa = valor;
                         break;
                     // Configuración de visualización (elementos con valor 'SI')
                     case 'A6':
@@ -78,20 +83,20 @@ export class StoreService {
                     case 'A41':
                     case 'A43':
                     case 'A44':
-                        this.setConfigBooleanOption(id, valor);
+                        this.setConfigBooleanOption(id, valor, newConfig);
                         break;
                     // Mostrar precios sin logueo (condición con valor 'NO')
                     case 'A31':
-                        this.configuracionSitio.MostrarPreciosSinLogueo = valor !== 'NO';
+                        newConfig.MostrarPreciosSinLogueo = valor !== 'NO';
                         break;
                     // Posicionamiento en Google
                     case 'A32':
-                        this.configuracionSitio.PosicionamientoEnGoogle = valor;
+                        newConfig.PosicionamientoEnGoogle = valor;
                         break;
                     // Script de rastreo
                     case 'A33':
                         if (valor.length > 3) {
-                            this.configuracionSitio.scriptRastreo = valor;
+                            newConfig.scriptRastreo = valor;
                         }
                         break;
                     // Redes sociales
@@ -113,44 +118,44 @@ export class StoreService {
                     case 'A26':
                     case 'A28':
                     case 'A29':
-                        this.setPasarelaOption(id, valor);
+                        this.setPasarelaOption(id, valor, newConfig);
                         break;
                     // Mensaje personalizado en el pago
                     case 'A49':
-                        this.configuracionSitio.MensajePersonalizadoPago = valor;
+                        newConfig.MensajePersonalizadoPago = valor;
                         break;
                     // Dirección, teléfono, correo, agencia, asesor, número de WhatsApp
                     case 'B1':
-                        this.configuracionSitio.address = valor;
+                        newConfig.address = valor;
                         break;
                     case 'B2':
-                        this.configuracionSitio.phone = valor;
+                        newConfig.phone = valor;
                         break;
                     case 'B3':
-                        this.configuracionSitio.email = valor;
+                        newConfig.email = valor;
                         break;
                     case 'B4':
-                        this.configuracionSitio.AgenciaDefaul = valor;
+                        newConfig.AgenciaDefaul = valor;
                         break;
                     case 'B5':
-                        this.configuracionSitio.AsesorPredeterminado = valor;
+                        newConfig.AsesorPredeterminado = valor;
                         break;
                     case 'A39':
-                        this.configuracionSitio.NumeroWpp = valor;
+                        newConfig.NumeroWpp = valor;
                         break;
                     // Activar o desactivar páginas
                     default:
                         if (id[0] === 'S') {
                             this.ActicarPaginas(valor);
                         } else if (id === 'A47') {
-                            this.configuracionSitio.VerFiltroMarcas = valor !== 'NO';
+                            newConfig.VerFiltroMarcas = valor !== 'NO';
                         } else if (id === 'A48') {
-                            this.configuracionSitio.VerMarcaDetalleProducto = valor !== 'NO';
+                            newConfig.VerMarcaDetalleProducto = valor !== 'NO';
                         }
                         break;
                 }
             });
-
+            this.configuracionSitioSubject.next(newConfig);
             this.CargarMenu(false);
 
         } catch (error) {
@@ -159,7 +164,7 @@ export class StoreService {
 
     }
 
-    private setConfigBooleanOption(id: string, valor: string): void {
+    private setConfigBooleanOption(id: string, valor: string, config: ConfiguracionSitio): void {
         const optionsMap = {
             'A6': 'VerProductosDestacados',
             'A7': 'VerMasVendidos',
@@ -180,7 +185,7 @@ export class StoreService {
             'A44': 'VerBontonAplicarCupon',
         };
         if (valor === 'SI') {
-            this.configuracionSitio[optionsMap[id]] = true;
+            config[optionsMap[id]] = true;
         }
     }
 
@@ -188,7 +193,7 @@ export class StoreService {
         this.redes.push({ type, url, icon });
     }
 
-    private setPasarelaOption(id: string, valor: string): void {
+    private setPasarelaOption(id: string, valor: string, config: ConfiguracionSitio): void {
         const pasarelaMap = {
             'A24': 'PasaleraPSE',
             'A25': 'PasarelaTranferenciaBancaria',
@@ -196,14 +201,14 @@ export class StoreService {
             'A28': 'VerBannerInformacion',
             'A29': 'VerAcordeonInformacion',
         };
-        this.configuracionSitio[pasarelaMap[id]] = valor !== 'NO';
+        config[pasarelaMap[id]] = valor !== 'NO';
     }
 
     public CargarMenu(CargarUsuario: boolean) {
 
         this.navigation = [];
         if (isPlatformBrowser(this.platformId)) {
-            if (!this.configuracionSitio.VerCompararProductos) {
+            if (!this.configuracionSitioSubject.value.VerCompararProductos) {
                 this.navigation = [
                     { label: 'Inicio', url: '/' },
                     {

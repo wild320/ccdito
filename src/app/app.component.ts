@@ -1,16 +1,11 @@
+import { DOCUMENT, isPlatformBrowser, ViewportScroller } from '@angular/common';
 import { Component, Inject, NgZone, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
-import { ToastrService } from 'ngx-toastr';
-import { CartService } from './shared/services/cart.service';
-import { CompareService } from './shared/services/compare.service';
-import { WishlistService } from './shared/services/wishlist.service';
-import { DOCUMENT, isPlatformBrowser, ViewportScroller } from '@angular/common';
 import { NavigationEnd, Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { filter, first } from 'rxjs/operators';
-import { CurrencyService } from './shared/services/currency.service';
-import { NegocioService } from './shared/services/negocio.service';
+import { Cconfiguracion } from 'src/data/contantes/cConfiguracion';
 import { UtilsTexto } from '../app/shared/utils/UtilsTexto';
-import { StoreService } from './shared/services/store.service';
 import { RootComponent } from './components/root/root.component';
 import { BlocksModule } from './modules/blocks/blocks.module';
 import { HeaderModule } from './modules/header/header.module';
@@ -18,28 +13,28 @@ import { MobileModule } from './modules/mobile/mobile.module';
 import { ShopModule } from './modules/shop/shop.module';
 import { UtilsModule } from './modules/utils/utils.module';
 import { WidgetsModule } from './modules/widgets/widgets.module';
+import { CartService } from './shared/services/cart.service';
+import { CompareService } from './shared/services/compare.service';
+import { CurrencyService } from './shared/services/currency.service';
+import { NegocioService } from './shared/services/negocio.service';
+import { StoreService } from './shared/services/store.service';
+import { WishlistService } from './shared/services/wishlist.service';
 import { SharedModule } from './shared/shared.module';
-import { Cconfiguracion } from 'src/data/contantes/cConfiguracion';
 
 @Component({
     selector: 'app-root',
     standalone: true,
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    imports: [BlocksModule,
-        HeaderModule,
-        MobileModule,
-        ShopModule,
-        SharedModule,
-        WidgetsModule,
-        UtilsModule, RootComponent, RouterModule, RouterLink, RouterOutlet
+    imports: [
+        BlocksModule, HeaderModule, MobileModule, ShopModule, SharedModule, WidgetsModule, UtilsModule, RootComponent, RouterModule, RouterLink, RouterOutlet
     ],
 })
 export class AppComponent implements OnInit {
-    title = signal<string>('');         // Inicia con una cadena vacía
-    urlImage = signal<string>('');      // Inicia con una cadena vacía
-    description = signal<string>('');   // Inicia con una cadena vacía
-    urlPublic = signal<string>('');     // Inicia con una cadena vacía
+    private title = signal<string>('');
+    private urlImage = signal<string>('');
+    private description = signal<string>('');
+    private urlPublic = signal<string>('');
 
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
@@ -55,20 +50,21 @@ export class AppComponent implements OnInit {
         private currency: CurrencyService,
         private negocio: NegocioService,
         private titleService: Title,
-        public storeService: StoreService,
+        private storeService: StoreService,
         private metaService: Meta
-    ) {      
-
+    ) {
+        // Solo ejecuta scripts en el navegador
         if (isPlatformBrowser(this.platformId)) {
-            this.initializeTrackingScript();
             this.setupPreloader();
         }
     }
 
     ngOnInit(): void {
-        
         this.initializeMetaInfo();
+        
+        this.initializeTrackingScript();
 
+        // Configura la moneda
         this.currency.options = {
             code: 'COP',
             display: 'code',
@@ -79,22 +75,21 @@ export class AppComponent implements OnInit {
         if (isPlatformBrowser(this.platformId)) {
             this.router.events.pipe(filter(event => event instanceof NavigationEnd))
                 .subscribe(() => this.scroller.scrollToPosition([0, 0]));
-    
+
             this.subscribeToCartEvents();
             this.subscribeToCompareEvents();
             this.subscribeToWishlistEvents();
         }
-
     }
 
     private initializeTrackingScript(): void {
-        if (this.storeService?.configuracionSitio?.scriptRastreo) {
-            // Se recomienda evitar eval(); intenta cargar el script de forma segura.
-            // Por ejemplo, añadiendo un script al DOM dinámicamente
-            const script = this.document.createElement('script');
-            script.text = this.storeService.configuracionSitio.scriptRastreo;
-            this.document.head.appendChild(script);
-        }
+        this.storeService.configuracionSitio$.subscribe(config => {
+            if (config?.scriptRastreo) {
+                const script = this.document.createElement('script');
+                script.src = config.scriptRastreo;
+                this.document.head.appendChild(script);
+            }
+        });
     }
 
     private setupPreloader(): void {
@@ -114,16 +109,34 @@ export class AppComponent implements OnInit {
     }
 
     private initializeMetaInfo(): void {
-        if (this.storeService.configuracionSitio) {
-            this.title.set(this.negocio.configuracion.NombreCliente || '[Carro Compras]');
-            this.description.set(this.storeService.configuracionSitio.PosicionamientoEnGoogle || 'Descripción predeterminada');
-            this.urlImage.set( `${this.negocio.configuracion.BaseUrl}${Cconfiguracion.urlAssetsConfiguracion}${this.negocio.configuracion.Logo}`);
-    
-            this.titleService.setTitle(this.title() || '');
-            this.setMetaTags();
-        }
+        this.storeService.configuracionSitio$.subscribe(config => {
+            if (config) {
+                const nombreCliente = this.negocio.configuracion.NombreCliente || '[Carro Compras]';
+                const descripcionGoogle = config.PosicionamientoEnGoogle || 'Descripción predeterminada';
+                const logoUrl = `${this.negocio.configuracion.BaseUrl}${Cconfiguracion.urlAssetsConfiguracion}${this.negocio.configuracion.Logo}`;
+
+                this.title.set(nombreCliente);
+                this.description.set(descripcionGoogle);
+                this.urlImage.set(logoUrl);
+
+                // Establecer título y metatags dinámicamente
+                this.titleService.setTitle(nombreCliente);
+                this.setMetaTags(descripcionGoogle, nombreCliente, logoUrl);
+            }
+        });
     }
-    
+
+    private setMetaTags(description: string, title: string, imageUrl: string): void {
+        this.metaService.updateTag({ name: 'description', content: description });
+        this.metaService.updateTag({ property: 'og:title', content: title });
+        this.metaService.updateTag({ property: 'og:description', content: description });
+        this.metaService.updateTag({ property: 'og:image', content: imageUrl });
+        this.metaService.updateTag({ property: 'og:url', content: this.urlPublic() });
+        this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
+        this.metaService.updateTag({ name: 'twitter:title', content: title });
+        this.metaService.updateTag({ name: 'twitter:description', content: description });
+        this.metaService.updateTag({ name: 'twitter:image', content: imageUrl });
+    }
 
     private subscribeToCartEvents(): void {
         this.cart.onAdding$.subscribe(product => {
@@ -141,19 +154,5 @@ export class AppComponent implements OnInit {
         this.wishlist.onAdding$.subscribe(product => {
             this.toastr.success(`Producto "${this.utils.TitleCase(product.name)}" agregado a la lista de deseos!`);
         });
-    }
-
-    private setMetaTags(): void {
-        this.metaService.addTags([
-            { name: 'description', content: this.description() },
-            { name: 'og:title', content: this.title() },
-            { name: 'og:description', content: this.description() },
-            { name: 'og:image', content: this.urlImage() },
-            { name: 'og:url', content: this.urlPublic() },
-            { name: 'twitter:card', content: 'summary_large_image' },
-            { name: 'twitter:title', content: this.title() },
-            { name: 'twitter:description', content: this.description() },
-            { name: 'twitter:image', content: this.urlImage() },
-        ]);
     }
 }
