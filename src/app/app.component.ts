@@ -57,9 +57,7 @@ export class AppComponent implements OnInit {
         private titleService: Title,
         public storeService: StoreService,
         private metaService: Meta
-    ) {
-        
-        this.initializeMetaInfo();
+    ) {      
 
         if (isPlatformBrowser(this.platformId)) {
             this.initializeTrackingScript();
@@ -68,6 +66,9 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        
+        this.initializeMetaInfo();
+
         this.currency.options = {
             code: 'COP',
             display: 'code',
@@ -116,7 +117,7 @@ export class AppComponent implements OnInit {
         if (this.storeService.configuracionSitio) {
             this.title.set(this.negocio.configuracion.NombreCliente || '[Carro Compras]');
             this.description.set(this.storeService.configuracionSitio.PosicionamientoEnGoogle || 'Descripción predeterminada');
-            this.urlImage.set( `${Cconfiguracion.urlAssetsConfiguracion}/LOGO.png`);
+            this.urlImage.set( `${this.negocio.configuracion.BaseUrl}${Cconfiguracion.urlAssetsConfiguracion}${this.negocio.configuracion.Logo}`);
     
             this.titleService.setTitle(this.title() || '');
             this.setMetaTags();
