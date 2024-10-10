@@ -65,10 +65,11 @@ export class AppComponent implements OnInit {
     ) {
         const { configuracionSitio } = this.StoreSvc;
         this.title = this.negocio.configuracion.NombreCliente;
-        this. urlImage= "https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO2.png";
+      //  this. urlImage= "https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO2.png";
         this. urlPublic = "magicomundo.con";
         this.titleService.setTitle(this.title ?? '');
         this.description = configuracionSitio?.PosicionamientoEnGoogle ?? 'NO alcanzo  cargar';
+        alert(configuracionSitio?.PosicionamientoEnGoogle)
         
         if (isPlatformBrowser(this.platformId)) {
                   
