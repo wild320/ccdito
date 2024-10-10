@@ -126,7 +126,7 @@ export class AppComponent implements OnInit {
     private setMetaTags(): void {
         const { configuracionSitio, redes } = this.StoreSvc;
         this.titles = configuracionSitio.PosicionamientoEnGoogle;
-        this.urlImage = "https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO.png";
+        this.urlImage = "https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO2.png";
         
         if (true) {
             const siteName = "OTRA MAS";
@@ -136,7 +136,7 @@ export class AppComponent implements OnInit {
     
             this.metaTagService.addTags([
                 // Meta generales
-                { name: 'description', content: "FORZADO NAME" },
+                { name: 'description', content: this.titles },
                 // { name: 'author', content: configuracionSitio.email },
                 // { name: 'address', content: configuracionSitio.address },
                 // { name: 'phone', content: configuracionSitio.phone },
@@ -148,8 +148,6 @@ export class AppComponent implements OnInit {
                 { property: 'og:type', content: 'website' },
                 { property: 'og:url', content: "WWW.MAGICOMUNDO.CO" },
                 { property: 'og:image', content: this.urlImage },
-                { property: 'og:image:width', content: '1200' },
-                { property: 'og:image:height', content: '630' }, // Imagen optimizada para redes sociales
                 // { property: 'og:email', content: configuracionSitio.email },
                 // { property: 'og:phone_number', content: configuracionSitio.phone },
                 // { property: 'og:address', content: configuracionSitio.address },
