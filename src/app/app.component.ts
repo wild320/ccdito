@@ -63,8 +63,15 @@ export class AppComponent implements OnInit {
         public StoreSvc: StoreService,
         private metaService: Meta
     ) {
+        const { configuracionSitio } = this.StoreSvc;
+        this.title = this.negocio.configuracion.NombreCliente;
+        this.titleService.setTitle(this.title ?? '');
+        this.description = configuracionSitio?.PosicionamientoEnGoogle ?? '';
         
         if (isPlatformBrowser(this.platformId)) {
+                  
+        this.urlImage = `${this.document.baseURI}/asset/configuracion/LOGO2.png`;
+        this.urlPublic = this.document.baseURI ?? '';
         
         eval(this.StoreSvc?.configuracionSitio?.scriptRastreo);
 
@@ -84,13 +91,8 @@ export class AppComponent implements OnInit {
         }
 
         
-            
-        this.urlImage = `${this.document.baseURI}/asset/configuracion/LOGO2.png`;
-        this.urlPublic = this.document.baseURI ?? '';
-        // const { configuracionSitio } = this.StoreSvc;
-        // this.title = this.negocio.configuracion.NombreCliente;
-        // this.titleService.setTitle(this.title ?? '');
-        // this.description = configuracionSitio?.PosicionamientoEnGoogle ?? '';
+      
+ 
 
     }
 
