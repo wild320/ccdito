@@ -66,14 +66,15 @@ export class AppComponent implements OnInit {
         
         if (isPlatformBrowser(this.platformId)) {
             
-        this.title = this.negocio.configuracion.NombreCliente;
+            eval(this.StoreSvc?.configuracionSitio?.scriptRastreo);
+            
         const { configuracionSitio } = this.StoreSvc;
+        this.title = this.negocio.configuracion.NombreCliente;
         this.titleService.setTitle(this.title ?? '');
         this.urlPublic = this.document.baseURI ?? '';
         this.urlImage = `${this.document.baseURI}/asset/configuracion/LOGO2.png`;
         this.description = configuracionSitio?.PosicionamientoEnGoogle ?? '';
 
-            eval(this.StoreSvc?.configuracionSitio?.scriptRastreo);
 
             this.zone.runOutsideAngular(() => {
                 this.router.events.pipe(filter(event => event instanceof NavigationEnd), first()).subscribe(() => {
