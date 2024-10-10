@@ -63,19 +63,11 @@ export class AppComponent implements OnInit {
         public StoreSvc: StoreService,
         private metaService: Meta
     ) {
-        const { configuracionSitio } = this.StoreSvc;
-        this.title = this.negocio.configuracion.NombreCliente;
-        // this. urlImage= "https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO2.png";
-        this.titleService.setTitle(this.title ?? '');
-        this.description = configuracionSitio?.PosicionamientoEnGoogle ?? 'falto';
-        
+
+
         if (isPlatformBrowser(this.platformId)) {
-                  
-        this.urlImage = `${this.document.baseURI}/asset/configuracion/LOGO2.png`;
-        this.urlPublic = this.document.baseURI ?? '';
-        alert(configuracionSitio?.PosicionamientoEnGoogle)
-        
-        eval(this.StoreSvc?.configuracionSitio?.scriptRastreo);
+
+            eval(this.StoreSvc?.configuracionSitio?.scriptRastreo);
 
 
             this.zone.runOutsideAngular(() => {
@@ -92,9 +84,9 @@ export class AppComponent implements OnInit {
             });
         }
 
-        
-      
- 
+
+
+
 
     }
 
@@ -107,7 +99,13 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        
+        const { configuracionSitio } = this.StoreSvc;
+        this.title = this.negocio.configuracion.NombreCliente;
+        // this. urlImage= "https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO2.png";
+        this.titleService.setTitle(this.title ?? '');
+        this.description = configuracionSitio?.PosicionamientoEnGoogle ?? 'falto';
+        this.urlImage = `${this.document.baseURI}/asset/configuracion/LOGO2.png`;
+        this.urlPublic = this.document.baseURI ?? '';
 
         this.setMetaTags();
         // properties of the CurrencyFormatOptions interface fully complies
@@ -149,9 +147,11 @@ export class AppComponent implements OnInit {
             { name: 'twitter:title', content: this.title },
             { name: 'twitter:description', content: this.description },
             { name: 'twitter:image', content: this.urlImage },
-          ]);
+        ]);
+        
+        alert(this.description)
     }
-    
+
 
 }
 
