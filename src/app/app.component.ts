@@ -41,8 +41,8 @@ import { ShopModule } from './modules/shop/shop.module';
 })
 export class AppComponent implements OnInit {
 
-    private title: string = "Wild Titulo";
-    private urlImage: string = "https://copiacarro--magico-mundo.us-central1.hosted.app/asset/configuracion/LOGO2.png";
+    private title: string;
+    private urlImage: string = "https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO2.png";
     private description: string = "Wild Descripcion";
     private urlPublic: string = "magicomundo.con";
 
@@ -64,7 +64,7 @@ export class AppComponent implements OnInit {
         private metaService: Meta
     ) {
         // const { configuracionSitio } = this.StoreSvc;
-        // this.title = this.negocio.configuracion.NombreCliente;
+        this.title = this.negocio.configuracion.NombreCliente;
         // this.titleService.setTitle(this.title ?? '');
         // this.description = configuracionSitio?.PosicionamientoEnGoogle ?? '';
         
