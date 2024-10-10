@@ -58,6 +58,9 @@ export class AppComponent implements OnInit {
         public storeService: StoreService,
         private metaService: Meta
     ) {
+        
+        this.initializeMetaInfo();
+
         if (isPlatformBrowser(this.platformId)) {
             this.initializeTrackingScript();
             this.setupPreloader();
@@ -65,7 +68,13 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.initializeMetaInfo();
+        this.currency.options = {
+            code: 'COP',
+            display: 'code',
+            digitsInfo: '1.0-2',
+            locale: 'es-CO'
+        };
+
         if (isPlatformBrowser(this.platformId)) {
             this.router.events.pipe(filter(event => event instanceof NavigationEnd))
                 .subscribe(() => this.scroller.scrollToPosition([0, 0]));
@@ -107,7 +116,7 @@ export class AppComponent implements OnInit {
         if (this.storeService.configuracionSitio) {
             this.title.set(this.negocio.configuracion.NombreCliente || '[Carro Compras]');
             this.description.set(this.storeService.configuracionSitio.PosicionamientoEnGoogle || 'Descripción predeterminada');
-            this.urlImage.set( `${Cconfiguracion.urlAssetsConfiguracion}/LOGO2.png`);
+            this.urlImage.set( `${Cconfiguracion.urlAssetsConfiguracion}/LOGO.png`);
     
             this.titleService.setTitle(this.title() || '');
             this.setMetaTags();
