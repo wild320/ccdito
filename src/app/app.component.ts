@@ -65,10 +65,10 @@ export class AppComponent implements OnInit {
     ) {
         
         this.title = this.negocio.configuracion.NombreCliente;
-        const { configuracionSitio, redes } = this.StoreSvc;
+        const { configuracionSitio } = this.StoreSvc;
         this.titleService.setTitle(this.title ?? '');
-        this.urlPublic = document.baseURI ?? '';
-        this.urlImage = this.negocio?.configuracion?.Logo ?? '';
+        this.urlPublic = this.document.baseURI ?? '';
+        this.urlImage = `${this.document.baseURI}/asset/configuracion/LOGO2.png`;
         this.description = configuracionSitio?.PosicionamientoEnGoogle ?? '';
 
 
