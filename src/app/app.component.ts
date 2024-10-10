@@ -19,6 +19,7 @@ import { ShopModule } from './modules/shop/shop.module';
 import { UtilsModule } from './modules/utils/utils.module';
 import { WidgetsModule } from './modules/widgets/widgets.module';
 import { SharedModule } from './shared/shared.module';
+import { Cconfiguracion } from 'src/data/contantes/cConfiguracion';
 
 @Component({
     selector: 'app-root',
@@ -64,8 +65,8 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.initializeMetaInfo();
         if (isPlatformBrowser(this.platformId)) {
-            this.initializeMetaInfo();
             this.router.events.pipe(filter(event => event instanceof NavigationEnd))
                 .subscribe(() => this.scroller.scrollToPosition([0, 0]));
     
@@ -106,8 +107,7 @@ export class AppComponent implements OnInit {
         if (this.storeService.configuracionSitio) {
             this.title.set(this.negocio.configuracion.NombreCliente || '[Carro Compras]');
             this.description.set(this.storeService.configuracionSitio.PosicionamientoEnGoogle || 'Descripción predeterminada');
-            this.urlImage.set(`${this.document.baseURI}/asset/configuracion/LOGO2.png`);
-            this.urlPublic.set(this.document.baseURI || '');
+            this.urlImage.set( `${Cconfiguracion.urlAssetsConfiguracion}/LOGO2.png`);
     
             this.titleService.setTitle(this.title() || '');
             this.setMetaTags();
