@@ -41,8 +41,10 @@ import { ShopModule } from './modules/shop/shop.module';
 })
 export class AppComponent implements OnInit {
 
-    titles: string = '';
-    urlImage: string = ""
+    private title: string;
+    private urlImage: string;
+    private description: string;
+    private urlPublic: string;
 
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
@@ -59,8 +61,15 @@ export class AppComponent implements OnInit {
         private negocio: NegocioService,
         private titleService: Title,
         public StoreSvc: StoreService,
-        private metaTagService: Meta
+        private metaService: Meta
     ) {
+        
+        this.title = this.negocio.configuracion.NombreCliente;
+        const { configuracionSitio, redes } = this.StoreSvc;
+        this.titleService.setTitle(this.title ?? '');
+        this.urlPublic = document.baseURI ?? '';
+        this.urlImage = this.negocio?.configuracion?.Logo ?? '';
+        this.description = configuracionSitio?.PosicionamientoEnGoogle ?? '';
 
 
         if (isPlatformBrowser(this.platformId)) {
@@ -124,59 +133,17 @@ export class AppComponent implements OnInit {
     }
 
     private setMetaTags(): void {
-        const { configuracionSitio, redes } = this.StoreSvc;
-        this.titles = configuracionSitio.PosicionamientoEnGoogle;
-        this.urlImage = "https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO2.png";
-        
-        if (true) {
-            const siteName = "OTRA MAS";
-            // const description = "wildemo";
-            // const imageUrl = "https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO2.png";
-            // const twitterHandle = '@' + ( 'defaultTwitterHandle'); 
-    
-            this.metaTagService.addTags([
-                // Meta generales
-                { name: 'description', content: this.titles },
-                // { name: 'author', content: configuracionSitio.email },
-                // { name: 'address', content: configuracionSitio.address },
-                // { name: 'phone', content: configuracionSitio.phone },
-                // { name: 'hours', content: configuracionSitio.hours },
-    
-                // Meta para redes sociales (Open Graph)
-                { property: 'og:title', content: "forzado" },
-                { property: 'og:description', content: this.titles },
-                { property: 'og:type', content: 'website' },
-                { property: 'og:url', content: "WWW.MAGICOMUNDO.CO" },
-                { property: 'og:image', content: this.urlImage },
-                // { property: 'og:email', content: configuracionSitio.email },
-                // { property: 'og:phone_number', content: configuracionSitio.phone },
-                // { property: 'og:address', content: configuracionSitio.address },
-                // { property: 'og:hours', content: configuracionSitio.hours },
-                // { property: 'og:site_name', content: siteName },
-    
-                // // Meta para WhatsApp o contacto
-                // { name: 'contact:phone_number', content: configuracionSitio.NumeroWpp?.toString() || '' },
-    
-                // // Meta para Twitter
-                // { name: 'twitter:card', content: 'summary_large_image' },
-                // { name: 'twitter:site', content: twitterHandle },
-                // { name: 'twitter:creator', content: twitterHandle },
-                // { name: 'twitter:title', content: siteName },
-                // { name: 'twitter:description', content: description },
-                // { name: 'twitter:image', content: imageUrl },
-    
-                // // Meta para Facebook
-                { property: 'fb:app_id', content: 'defaultAppId' },
-                // { property: 'fb:pages', content: redes[1]?.url || 'defaultPageId' },
-                
-                // // Meta para Instagram
-                // { name: 'instagram:username', content: 'magicomundo.co' },
-            ]);
-    
-            this.titleService.setTitle(siteName);
-        } else {
-            alert('No se encontró la configuración del sitio.');
-        }
+        this.metaService.addTags([
+            { name: 'description', content: this.description },
+            { name: 'og:title', content: this.title },
+            { name: 'og:description', content: this.description },
+            { name: 'og:image', content: this.urlImage },
+            { name: 'og:url', content: this.urlPublic },
+            { name: 'twitter:card', content: 'summary_large_image' },
+            { name: 'twitter:title', content: this.title },
+            { name: 'twitter:description', content: this.description },
+            { name: 'twitter:image', content: this.urlImage },
+          ]);
     }
     
 
