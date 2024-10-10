@@ -63,17 +63,16 @@ export class AppComponent implements OnInit {
         public StoreSvc: StoreService,
         private metaService: Meta
     ) {
-        // const { configuracionSitio } = this.StoreSvc;
+        const { configuracionSitio } = this.StoreSvc;
         this.title = this.negocio.configuracion.NombreCliente;
         this. urlImage= "https://copiacarro--magico-mundo.us-central1.hosted.app/assets/configuracion/LOGO2.png";
-        this. description = "Wild Descripcion";
         this. urlPublic = "magicomundo.con";
         this.titleService.setTitle(this.title ?? '');
-        // this.description = configuracionSitio?.PosicionamientoEnGoogle ?? '';
+        this.description = configuracionSitio?.PosicionamientoEnGoogle ?? 'NO alcanzo  cargar';
         
         if (isPlatformBrowser(this.platformId)) {
                   
-        // this.urlImage = `${this.document.baseURI}/asset/configuracion/LOGO2.png`;
+        this.urlImage = `${this.document.baseURI}/asset/configuracion/LOGO.png`;
         // this.urlPublic = this.document.baseURI ?? '';
         
         eval(this.StoreSvc?.configuracionSitio?.scriptRastreo);
