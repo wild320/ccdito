@@ -41,10 +41,10 @@ import { ShopModule } from './modules/shop/shop.module';
 })
 export class AppComponent implements OnInit {
 
-    private title: string;
-    private urlImage: string;
-    private description: string;
-    private urlPublic: string;
+    private title: string = "Wild Titulo";
+    private urlImage: string = "https://copiacarro--magico-mundo.us-central1.hosted.app/asset/configuracion/LOGO2.png";
+    private description: string = "Wild Descripcion";
+    private urlPublic: string = "magicomundo.con";
 
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
@@ -63,15 +63,15 @@ export class AppComponent implements OnInit {
         public StoreSvc: StoreService,
         private metaService: Meta
     ) {
-        const { configuracionSitio } = this.StoreSvc;
-        this.title = this.negocio.configuracion.NombreCliente;
-        this.titleService.setTitle(this.title ?? '');
-        this.description = configuracionSitio?.PosicionamientoEnGoogle ?? '';
+        // const { configuracionSitio } = this.StoreSvc;
+        // this.title = this.negocio.configuracion.NombreCliente;
+        // this.titleService.setTitle(this.title ?? '');
+        // this.description = configuracionSitio?.PosicionamientoEnGoogle ?? '';
         
         if (isPlatformBrowser(this.platformId)) {
                   
-        this.urlImage = `${this.document.baseURI}/asset/configuracion/LOGO2.png`;
-        this.urlPublic = this.document.baseURI ?? '';
+        // this.urlImage = `${this.document.baseURI}/asset/configuracion/LOGO2.png`;
+        // this.urlPublic = this.document.baseURI ?? '';
         
         eval(this.StoreSvc?.configuracionSitio?.scriptRastreo);
 
