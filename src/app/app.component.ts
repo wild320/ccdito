@@ -53,6 +53,11 @@ export class AppComponent implements OnInit {
         private storeService: StoreService,
         private metaService: Meta
     ) {
+        
+        this.initializeMetaInfo();
+        
+        this.initializeTrackingScript();
+
         // Solo ejecuta scripts en el navegador
         if (isPlatformBrowser(this.platformId)) {
             this.setupPreloader();
@@ -60,10 +65,6 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.initializeMetaInfo();
-        
-        this.initializeTrackingScript();
-
         // Configura la moneda
         this.currency.options = {
             code: 'COP',
