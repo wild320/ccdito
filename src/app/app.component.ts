@@ -53,13 +53,12 @@ export class AppComponent implements OnInit {
         private storeService: StoreService,
         private metaService: Meta
     ) {
-        
+
         this.storeService.configuracionSitio$.subscribe(config => {
-            console.log("Configdel app", config);
-            if(config){
-                
-            this.initializeTrackingScript(config);
-            this.initializeMetaInfo(config);
+            if (config) {
+
+                this.initializeTrackingScript(config);
+                this.initializeMetaInfo(config);
             }
         });
 
@@ -117,10 +116,8 @@ export class AppComponent implements OnInit {
             const nombreCliente = this.negocio.configuracion.NombreCliente || '[Carro Compras]';
             const descripcionGoogle = config.PosicionamientoEnGoogle || 'Descripción predeterminada';
             const logoUrl = `${this.negocio.configuracion.BaseUrl}${Cconfiguracion.urlAssetsConfiguracion}${this.negocio.configuracion.Logo}`;
-            console.log(logoUrl);
             this.title.set(nombreCliente);
             this.description.set(descripcionGoogle);
-            this.urlImage.set(logoUrl);
 
             // Establecer título y metatags dinámicamente
             this.titleService.setTitle(nombreCliente);
