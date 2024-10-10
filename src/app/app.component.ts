@@ -64,15 +64,14 @@ export class AppComponent implements OnInit {
         private metaService: Meta
     ) {
         
+        if (isPlatformBrowser(this.platformId)) {
+            
         this.title = this.negocio.configuracion.NombreCliente;
         const { configuracionSitio } = this.StoreSvc;
         this.titleService.setTitle(this.title ?? '');
         this.urlPublic = this.document.baseURI ?? '';
         this.urlImage = `${this.document.baseURI}/asset/configuracion/LOGO2.png`;
         this.description = configuracionSitio?.PosicionamientoEnGoogle ?? '';
-
-
-        if (isPlatformBrowser(this.platformId)) {
 
             eval(this.StoreSvc?.configuracionSitio?.scriptRastreo);
 
