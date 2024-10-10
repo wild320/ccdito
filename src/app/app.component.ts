@@ -54,9 +54,14 @@ export class AppComponent implements OnInit {
         private metaService: Meta
     ) {
         
-        this.initializeMetaInfo();
-        
-        this.initializeTrackingScript();
+        this.storeService.configuracionSitio$.subscribe(config => {
+            console.log("Configdel app", config);
+            if(config){
+                
+            this.initializeTrackingScript(config);
+            this.initializeMetaInfo(config);
+            }
+        });
 
         // Solo ejecuta scripts en el navegador
         if (isPlatformBrowser(this.platformId)) {
@@ -83,14 +88,12 @@ export class AppComponent implements OnInit {
         }
     }
 
-    private initializeTrackingScript(): void {
-        this.storeService.configuracionSitio$.subscribe(config => {
-            if (config?.scriptRastreo) {
-                const script = this.document.createElement('script');
-                script.src = config.scriptRastreo;
-                this.document.head.appendChild(script);
-            }
-        });
+    private initializeTrackingScript(config): void {
+        if (config?.scriptRastreo) {
+            const script = this.document.createElement('script');
+            script.src = config.scriptRastreo;
+            this.document.head.appendChild(script);
+        }
     }
 
     private setupPreloader(): void {
@@ -109,22 +112,20 @@ export class AppComponent implements OnInit {
         });
     }
 
-    private initializeMetaInfo(): void {
-        this.storeService.configuracionSitio$.subscribe(config => {
-            if (config) {
-                const nombreCliente = this.negocio.configuracion.NombreCliente || '[Carro Compras]';
-                const descripcionGoogle = config.PosicionamientoEnGoogle || 'Descripción predeterminada';
-                const logoUrl = `${this.negocio.configuracion.BaseUrl}${Cconfiguracion.urlAssetsConfiguracion}${this.negocio.configuracion.Logo}`;
+    private initializeMetaInfo(config): void {
+        if (config) {
+            const nombreCliente = this.negocio.configuracion.NombreCliente || '[Carro Compras]';
+            const descripcionGoogle = config.PosicionamientoEnGoogle || 'Descripción predeterminada';
+            const logoUrl = `${this.negocio.configuracion.BaseUrl}${Cconfiguracion.urlAssetsConfiguracion}${this.negocio.configuracion.Logo}`;
+            console.log(logoUrl);
+            this.title.set(nombreCliente);
+            this.description.set(descripcionGoogle);
+            this.urlImage.set(logoUrl);
 
-                this.title.set(nombreCliente);
-                this.description.set(descripcionGoogle);
-                this.urlImage.set(logoUrl);
-
-                // Establecer título y metatags dinámicamente
-                this.titleService.setTitle(nombreCliente);
-                this.setMetaTags(descripcionGoogle, nombreCliente, logoUrl);
-            }
-        });
+            // Establecer título y metatags dinámicamente
+            this.titleService.setTitle(nombreCliente);
+            this.setMetaTags(descripcionGoogle, nombreCliente, logoUrl);
+        }
     }
 
     private setMetaTags(description: string, title: string, imageUrl: string): void {

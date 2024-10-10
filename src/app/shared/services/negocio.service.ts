@@ -36,6 +36,7 @@ export class NegocioService {
 
     try {
       const config: any = await firstValueFrom(this.httpClient.get(this.UrlJsonConfguracion, options));
+      console.log(config);
       this.configuracion = config;
       this.UrlServicioCarroCompras = `${this.configuracion.UrlServicioCarroCompras}${CServicios.ApiCarroCompras}${CServicios.ServicioConfiguracionCC}`;
     } catch (err) {
