@@ -1,11 +1,9 @@
 {
-  "NombreCliente": "Mágico Mundo Demo",
+  "NombreCliente": "[Abako ERP] - Carro Compras",
   "Logo": "LOGO.png",
-  "LogoMetaTag": "LOGO2.png",
   "UrlServicioCarroCompras":  "https://clouderp.abakoerp.com:9569/",
   "UrlServicioNegocio":  "https://clouderp.abakoerp.com:9569/",
-  "UrlServicioAdministracion":  "https://clouderp.abakoerp.com:9569/",
-  "BaseUrl": "https://copiacarro--magico-mundo.us-central1.hosted.app/"
+  "UrlServicioAdministracion":  "https://clouderp.abakoerp.com:9569/"
 
 
 }

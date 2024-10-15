@@ -8,7 +8,7 @@ import { ArticulosService } from '../../../../shared/services/articulos.service'
 
 // modelos
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { Meta, Title } from '@angular/platform-browser';
+import { Meta } from '@angular/platform-browser';
 import { Item } from '../../../../../data/modelos/articulos/Items';
 
 @Component({
@@ -25,46 +25,16 @@ export class PageProductComponent implements OnInit, OnDestroy {
     sidebarPosition: 'start' | 'end' = 'start'; // For LTR scripts "start" is "left" and "end" is "right"
     private cadenaString: string = "";
     private valorProductoUnit: any;
-
-    productoFICI = {
-        nombre: 'Sombrero Volador Mágico',
-        descripcion: 'Este increíble sombrero volador permite a su portador levitar por los aires con elegancia y estilo. Perfecto para magos y aventureros.',
-        precio: 299.99,
-        imagenUrl: 'https://clouderp.abakoerp.com:9569/sitioimagenes/Articulos/202310273103135.jpg',
-        url: 'https://copiacarro--magico-mundo.us-central1.hosted.app/shop/products/35/CHOCOLATE-ADRO-EMOJI-45G'
-      };
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
         @Inject(DOCUMENT) private document: Document,
         private shop: ShopService,
         private route: ActivatedRoute,
         public articulossvc: ArticulosService,
-        private meta: Meta,
-        private title: Title,
+        private meta: Meta
     ) { }
 
     ngOnInit(): void {
-        this.title.setTitle(`${this.productoFICI.nombre} - Demo Carro Mágico`);
-
-        // Añadir meta tags dinámicos
-        this.meta.addTags([
-          { name: 'description', content: `${this.productoFICI.nombre} - ${this.productoFICI.descripcion}. Solo por ${this.productoFICI.precio} USD.` },
-          { name: 'keywords', content: 'varita mágica, magia, productos mágicos, compra varita, varitas, magia suprema' },
-          { name: 'author', content: 'Demo Carro Mágico' },
-          { name: 'robots', content: 'index, follow' },
-          { property: 'og:title', content: `${this.productoFICI.nombre} - Demo Carro Mágico` },
-          { property: 'og:description', content: `${this.productoFICI.descripcion}. Solo por ${this.productoFICI.precio} USD.` },
-          { property: 'og:type', content: 'product' },
-          { property: 'og:url', content: this.productoFICI.url },
-          { property: 'og:image', content: this.productoFICI.imagenUrl },
-          { property: 'product:price:amount', content: this.productoFICI.precio.toString() },
-          { property: 'product:price:currency', content: 'USD' },
-          { name: 'twitter:card', content: 'summary_large_image' },
-          { name: 'twitter:title', content: `${this.productoFICI.nombre} - Demo Carro Mágico` },
-          { name: 'twitter:description', content: `${this.productoFICI.descripcion}. Solo por ${this.productoFICI.precio} USD.` },
-          { name: 'twitter:image', content: this.productoFICI.imagenUrl },
-        ]);
-
         if (isPlatformBrowser(this.platformId)) {
 
 
@@ -75,6 +45,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
                     this.product = this.articulossvc.getArticuloDetalle().item;
                     console.log("detll", this.product);
                     if (this.product) {
+                        this.setMetaTags();
                         this.cadenaString = this.product.name;
                         this.valorProductoUnit = this.product.price;
 
@@ -114,11 +85,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
                 this.sidebarPosition = data['sidebarPosition'] || this.sidebarPosition;
 
             });
-            
-           // this.setMetaTags();
         }
-
-
     }
 
     SetBreadcrumbs(breadcrumbs: any[]) {
@@ -139,41 +106,38 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
     }
 
-    // setMetaTags(): void {
+    setMetaTags(): void {
+        const { name, caracteristicas, brand, images, price, rating, inventario, urlAmigable, id } = this.product;
 
-    //     const { name, caracteristicas, brand, images, price, rating, inventario, urlAmigable, id } = this.product;
-
-    //     this.title.setTitle(name);
-
-    //     const baseHref = `${document.baseURI}`;
+        const baseHref = this.document.querySelector('base')?.getAttribute('href') || '';
     
-    //     // Set meta description (use 'caracteristicas' or a default value)
-    //     const description = caracteristicas || 'Compra este producto de alta calidad al mejor precio.';
+        // Set meta description (use 'caracteristicas' or a default value)
+        const description = caracteristicas || 'Compra este producto de alta calidad al mejor precio.';
     
-    //     // Set meta title
-    //     const title = `${name} - ${brand?.['name'] || 'Marca Desconocida'} - Disponible en nuestra tienda`;
+        // Set meta title
+        const title = `${name} - ${brand?.['name'] || 'Marca Desconocida'} - Disponible en nuestra tienda`;
     
-    //     // Set meta keywords (e.g., name, brand, product details)
-    //     const keywords = `${name}, ${brand?.['name'] }, precio, comprar, ${rating} estrellas, ${inventario} en stock, ${price}`;
+        // Set meta keywords (e.g., name, brand, product details)
+        const keywords = `${name}, ${brand?.['name'] }, precio, comprar, ${rating} estrellas, ${inventario} en stock, ${price}`;
     
-    //     // Set product image for Open Graph and Twitter Cards
-    //     const imageUrl = images?.length ? images[0] : `${baseHref}/assets/configuracion/LOGO2.png`;
+        // Set product image for Open Graph and Twitter Cards
+        const imageUrl = images?.length ? images[0] : `${baseHref}/assets/configuracion/LOGO2.png`;
     
-    //     // Update the meta tags
-    //     this.meta.updateTag({ name: 'description', content: description });
-    //     this.meta.updateTag({ name: 'title', content: title });
-    //     this.meta.updateTag({ name: 'keywords', content: keywords });
+        // Update the meta tags
+        this.meta.updateTag({ name: 'description', content: description });
+        this.meta.updateTag({ name: 'title', content: title });
+        this.meta.updateTag({ name: 'keywords', content: keywords });
     
-    //     // Open Graph meta tags for social sharing
-    //     this.meta.updateTag({ property: 'og:title', content: title });
-    //     this.meta.updateTag({ property: 'og:description', content: description });
-    //     this.meta.updateTag({ property: 'og:image', content: imageUrl });
-    //     this.meta.updateTag({ property: 'og:url', content: `${baseHref}/shop/products/${id}/${urlAmigable}` });
+        // Open Graph meta tags for social sharing
+        this.meta.updateTag({ property: 'og:title', content: title });
+        this.meta.updateTag({ property: 'og:description', content: description });
+        this.meta.updateTag({ property: 'og:image', content: imageUrl });
+        this.meta.updateTag({ property: 'og:url', content: `${baseHref}/shop/products/${id}/${urlAmigable}` });
     
-    //     // Twitter Card meta tags
-    //     this.meta.updateTag({ name: 'twitter:title', content: title });
-    //     this.meta.updateTag({ name: 'twitter:description', content: description });
-    //     this.meta.updateTag({ name: 'twitter:image', content: imageUrl });
-    // }
+        // Twitter Card meta tags
+        this.meta.updateTag({ name: 'twitter:title', content: title });
+        this.meta.updateTag({ name: 'twitter:description', content: description });
+        this.meta.updateTag({ name: 'twitter:image', content: imageUrl });
+    }
     
 }
