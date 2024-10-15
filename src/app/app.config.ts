@@ -2,6 +2,7 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { APP_INITIALIZER, ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideClientHydration } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { provideToastr } from 'ngx-toastr';
 import { WINDOW, windowProvider } from './providers/window';
@@ -11,7 +12,6 @@ import { NegocioService } from './shared/services/negocio.service';
 import { StoreService } from './shared/services/store.service';
 import { UsuarioService } from './shared/services/usuario.service';
 import { UtilsTexto } from './shared/utils/UtilsTexto';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export function CargarConfiguracion(configLocal: NegocioService, configGeneral: StoreService, usuario: UsuarioService, banner: BannerService) {
   return async (): Promise<any> => {
@@ -23,7 +23,7 @@ export function CargarConfiguracion(configLocal: NegocioService, configGeneral: 
 
       // Carga el resto de las configuraciones
       await usuario.cargarUsuarioStorage();
-    //  await banner.cargarBanner();
+      //  await banner.cargarBanner();
     } catch (error) {
       console.error('Error al cargar la configuración:', error);
     }
@@ -35,7 +35,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideClientHydration(),
-    provideToastr(),    
+    provideToastr(),
     provideHttpClient(withFetch()),
     importProvidersFrom(BrowserAnimationsModule),
     UtilsTexto,
