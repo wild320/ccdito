@@ -24,6 +24,8 @@ import { WidgetsModule } from './modules/widgets/widgets.module';
 import { StoreService } from './shared/services/store.service';
 import { SharedModule } from './shared/shared.module';
 import { ShopModule } from './modules/shop/shop.module';
+import { ConfiguracionSitio } from 'src/data/modelos/negocio/ConfiguracionSitio';
+import { Cconfiguracion } from 'src/data/contantes/cConfiguracion';
 
 @Component({
     selector: 'app-root',
@@ -59,6 +61,21 @@ export class AppComponent implements OnInit {
         private route: ActivatedRoute
     ) {
 
+        this.route.data.subscribe(data => {
+            console.log("router", data);
+            const negocio = this.negocio.configuracion;            
+            const StoreSvc = this.StoreSvc.configuracionSitio;
+            if (negocio) {
+                this.titleService.setTitle(negocio.NombreCliente);
+                console.log("negocio", negocio)
+
+            }
+            if(StoreSvc) {
+                console.log("StoreSvc", StoreSvc);
+                this.generateMetaTag(StoreSvc);
+            }
+        });
+
 
         if (isPlatformBrowser(this.platformId)) {
             eval(this.StoreSvc?.configuracionSitio?.scriptRastreo)
@@ -78,25 +95,28 @@ export class AppComponent implements OnInit {
         }
 
     }
+    generateMetaTag(StoreSvc: ConfiguracionSitio) {
+        this.metaTagService.addTags([
+            { name: 'author', content: StoreSvc.email },
+            { name: 'description', content: StoreSvc.PosicionamientoEnGoogle },
+            { property: 'og:title', content: this.negocio.configuracion.NombreCliente},
+            { property: 'og:description', content: StoreSvc.PosicionamientoEnGoogle },
+            { property: 'og:type', content: 'website' },
+            { property: 'og:url', content: this.negocio.configuracion.baseUrl },
+            { property: 'og:image', content: `${this.negocio.configuracion.baseUrl}/${Cconfiguracion.urlAssetsConfiguracion}/LOGO2.png` },
+            { name: 'twitter:card', content:'summary' },
+            { name: 'twitter:title', content: this.negocio.configuracion.NombreCliente },
+            { name: 'twitter:description', content: StoreSvc.PosicionamientoEnGoogle },
+            { name: 'twitter:image', content: `${this.negocio.configuracion.baseUrl}/${Cconfiguracion.urlAssetsConfiguracion}/LOGO2.png` }
+        ]);
+
+        
+        console.log(StoreSvc.MensajePersonalizadoPago);
+        
+    }
 
     ngOnInit(): void {
-        this.route.data.subscribe(data => {
-            console.log(data);
-            const negocio = this.negocio.configuracion;            
-            const StoreSvc = this.StoreSvc.configuracionSitio;
-            if (negocio) {
-                this.titleService.setTitle(negocio.NombreCliente);
-                console.log(negocio)
-
-            }
-            if(StoreSvc) {
-                console.log(StoreSvc)
-                this.metaTagService.addTag({
-                    name: 'description',
-                    content: StoreSvc.PosicionamientoEnGoogle
-                })
-            }
-        });
+ 
         // properties of the CurrencyFormatOptions interface fully complies
         // with the arguments of the built-in pipe "currency"
         // https://angular.io/api/common/CurrencyPipe
