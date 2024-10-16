@@ -10,6 +10,7 @@ import { CheckoutGuard } from './guards/checkout.guard';
 import { PageProductComponent } from './pages/page-product/page-product.component';
 import { ProductsListResolverService } from './resolvers/products-list-resolver.service';
 import { PageOrderSuccessComponent } from './pages/page-order-success/page-order-success.component';
+import { productResolver } from './resolvers/product.resolver';
 
 const categoryPageData: Data = {
     // Number of products per row. Possible values: 3, 4, 5.
@@ -49,6 +50,9 @@ const routes: Routes = [
             // For LTR scripts "start" is "left" and "end" is "right".
             sidebarPosition: 'start'
         },
+        resolve: {
+            product: productResolver
+        }
     },
     {
         path: 'cart',

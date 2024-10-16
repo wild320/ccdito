@@ -245,8 +245,9 @@ export class ArticulosService {
     return this.ArticulosDetalle$.asObservable();
   }
 
-  SetSeleccionarArticuloDetalle(idArticulo: number, SiempreRecuperar: boolean) {
-    // Si el articulo no existe aun debe consultarlo a la api
+  async SetSeleccionarArticuloDetalle(idArticulo: number, SiempreRecuperar: boolean) {
+    try {
+          // Si el articulo no existe aun debe consultarlo a la api
     if (this.getArticulos()?.products === undefined || SiempreRecuperar) {
       this.RecuperarArticuloDetalle(idArticulo);
 
@@ -260,6 +261,12 @@ export class ArticulosService {
       this.seleccionado.breadcrumbs = this.getArticulos().breadcrumbs;
       this.setArticuloDetalle$(this.seleccionado);
     }
+      
+    } catch (error) {
+      console.error('Error al recuperar articulo detalle', error);
+      
+    }
+
 
   }
 
