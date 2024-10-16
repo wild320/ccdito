@@ -112,7 +112,10 @@ export class PageProductComponent implements OnInit {
     setMetaTags(): void {
         const negocio = this.negocioConfig;
 
-        if (!this.product) return alert("Esperando Porducto"); // Verifica que el producto esté disponible
+        if (!this.product) {
+            alert("Esperando Porducto")
+            return;
+        }; // Verifica que el producto esté disponible
 
         const { name, caracteristicas, brand, images, price, rating, inventario, urlAmigable, id } = this.product;
 
@@ -125,8 +128,8 @@ export class PageProductComponent implements OnInit {
         const imageUrl = images?.length ? images[0] : `${baseHref}assets/configuracion/LOGO2.png`;
 
         this.metaTagService.addTags([
-            { name: 'description', content: description }, 
-            { name: 'title', content: title }, 
+            { name: 'description', content: description },
+            { name: 'title', content: title },
             { name: 'keywords', content: keywords },
             { property: 'og:title', content: title },
             { property: 'og:description', content: description },
