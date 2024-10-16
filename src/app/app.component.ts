@@ -122,8 +122,6 @@ export class AppComponent implements OnInit {
             { name: 'twitter:creator', content: '@tuTwitterHandle' }, // Reemplaza con el handle del autor si lo tienes
 
             // Meta tags adicionales útiles
-            { name: 'viewport', content: 'width=device-width, initial-scale=1' }, // Para diseño responsivo
-            { name: 'apple-mobile-web-app-capable', content: 'yes' }, // Habilita app en iOS
             { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' }, // Estilo de la barra de estado en iOS
             { name: 'format-detection', content: 'telephone=no' }, // Para evitar el formateo automático de números de teléfono
         ]);
