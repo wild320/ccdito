@@ -38,25 +38,23 @@ export class PageProductComponent implements OnInit {
         private metaTagService: Meta,
     ) { 
         this.productSlug = this.route.snapshot.params['productSlug'] || this.route.snapshot.data['productSlug'] || null;
-
-        this.route.data.subscribe(data => {
-            const negocio = this.negocio.configuracion;
-            const StoreSvc = this.StoreSvc.configuracionSitio;
-            this.titleService.setTitle(negocio.NombreCliente);
-            
-            this.layout = data['layout'] || this.layout;
-            this.sidebarPosition = data['sidebarPosition'] || this.sidebarPosition;
-        });
     }
 
     ngOnInit(): void {
 
         this.route.data.subscribe((data) => {
-            // The resolver provides the product details here
+            
+            const negocio = this.negocio.configuracion;
+            
+            this.layout = data['layout'] || this.layout;
+
+            this.sidebarPosition = data['sidebarPosition'] || this.sidebarPosition;
+
             const resolvedProduct = data['product'];
+
             if (resolvedProduct) {
                 this.product = resolvedProduct;
-                this.setMetaTags();
+                this.setMetaTags(negocio);
                 // this.SetBreadcrumbs(resolvedProduct.breadcrumbs);
             }
 
@@ -124,9 +122,12 @@ export class PageProductComponent implements OnInit {
 
 
 
-    setMetaTags(): void {
+    setMetaTags(negocio): void {
+        console.log('setMetaTags', negocio, this.product);
         
         const { name, caracteristicas, brand, images, price, rating, inventario, urlAmigable, id } = this.product;
+        
+        this.titleService.setTitle(negocio.NombreCliente + ' | ' + name);
 
         const baseHref = this.negocio.configuracion.baseUrl;
 
@@ -157,6 +158,8 @@ export class PageProductComponent implements OnInit {
         this.metaTagService.updateTag({ name: 'twitter:title', content: title });
         this.metaTagService.updateTag({ name: 'twitter:description', content: description });
         this.metaTagService.updateTag({ name: 'twitter:image', content: imageUrl });
+
+        console.log("fin meta tags updated");
     }
 
 }
