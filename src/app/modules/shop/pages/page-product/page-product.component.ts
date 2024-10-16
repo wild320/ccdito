@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, makeStateKey, OnInit, TransferState } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ShopService } from '../../../../shared/api/shop.service';
 import { Link } from '../../../../shared/interfaces/link';
@@ -11,6 +11,8 @@ import { Meta, Title } from '@angular/platform-browser';
 import { Item } from '../../../../../data/modelos/articulos/Items';
 import { NegocioService } from 'src/app/shared/services/negocio.service';
 import { StoreService } from 'src/app/shared/services/store.service';
+
+const PRODUCT_KEY = makeStateKey<Item>('product');
 
 @Component({
     selector: 'app-page-product',
@@ -31,18 +33,20 @@ export class PageProductComponent implements OnInit {
         private shop: ShopService,
         private route: ActivatedRoute,
         public articulossvc: ArticulosService,
-        
+
+        private transferState: TransferState,
+
         private negocio: NegocioService,
         private titleService: Title,
         public StoreSvc: StoreService,
         private metaTagService: Meta,
-    ) { 
+    ) {
         this.productSlug = this.route.snapshot.params['productSlug'] || this.route.snapshot.data['productSlug'] || null;
 
         this.route.data.subscribe((data) => {
-            
+
             const negocio = this.negocio.configuracion;
-            
+
             this.layout = data['layout'] || this.layout;
 
             this.sidebarPosition = data['sidebarPosition'] || this.sidebarPosition;
@@ -51,8 +55,47 @@ export class PageProductComponent implements OnInit {
 
             if (resolvedProduct) {
                 this.product = resolvedProduct;
+                console.log('setMetaTags', negocio, this.product);
+
+                const { name, caracteristicas, brand, images, price, rating, inventario, urlAmigable, id } = this.product;
+
+                this.titleService.setTitle(negocio.NombreCliente + ' | ' + name);
+
+                const baseHref = this.negocio.configuracion.baseUrl;
+
+                // Set meta description (use 'caracteristicas' or a default value)
+                const description = caracteristicas || 'Compra este producto de alta calidad al mejor precio.';
+
+                // Set meta title
+                const title = `${name} - ${brand?.['name'] || 'Marca Desconocida'} - Disponible en nuestra tienda`;
+
+                // Set meta keywords (e.g., name, brand, product details)
+                const keywords = `${name}, ${brand?.['name']}, precio, comprar, ${rating} estrellas, ${inventario} en stock, ${price}`;
+
+                // Set product image for Open Graph and Twitter Cards
+                const imageUrl = images?.length ? images[0] : `${baseHref}assets/configuracion/LOGO2.png`;
+
+                // Update the meta tags
+                this.metaTagService.updateTag({ name: 'description', content: description });
+                this.metaTagService.updateTag({ name: 'title', content: title });
+                this.metaTagService.updateTag({ name: 'keywords', content: keywords });
+
+                // Open Graph meta tags for social sharing
+                this.metaTagService.updateTag({ property: 'og:title', content: title });
+                this.metaTagService.updateTag({ property: 'og:description', content: description });
+                this.metaTagService.updateTag({ property: 'og:image', content: imageUrl });
+                this.metaTagService.updateTag({ property: 'og:url', content: `${baseHref}/shop/products/${id}/${urlAmigable}` });
+
+                // Twitter Card meta tags
+                this.metaTagService.updateTag({ name: 'twitter:title', content: title });
+                this.metaTagService.updateTag({ name: 'twitter:description', content: description });
+                this.metaTagService.updateTag({ name: 'twitter:image', content: imageUrl });
+
+                console.log("fin meta tags updated");
                 this.setMetaTags(negocio);
                 // this.SetBreadcrumbs(resolvedProduct.breadcrumbs);
+
+                this.transferState.set(PRODUCT_KEY, resolvedProduct);
             }
 
             // Fetch related products separately
@@ -65,7 +108,7 @@ export class PageProductComponent implements OnInit {
 
     ngOnInit(): void {
 
-       
+
 
         // this.route.paramMap.subscribe(data => {
 
@@ -125,43 +168,8 @@ export class PageProductComponent implements OnInit {
 
 
     setMetaTags(negocio): void {
-        console.log('setMetaTags', negocio, this.product);
-        
-        const { name, caracteristicas, brand, images, price, rating, inventario, urlAmigable, id } = this.product;
-        
-        this.titleService.setTitle(negocio.NombreCliente + ' | ' + name);
+        console.log(negocio);
 
-        const baseHref = this.negocio.configuracion.baseUrl;
-
-        // Set meta description (use 'caracteristicas' or a default value)
-        const description = caracteristicas || 'Compra este producto de alta calidad al mejor precio.';
-
-        // Set meta title
-        const title = `${name} - ${brand?.['name'] || 'Marca Desconocida'} - Disponible en nuestra tienda`;
-
-        // Set meta keywords (e.g., name, brand, product details)
-        const keywords = `${name}, ${brand?.['name']}, precio, comprar, ${rating} estrellas, ${inventario} en stock, ${price}`;
-
-        // Set product image for Open Graph and Twitter Cards
-        const imageUrl = images?.length ? images[0] : `${baseHref}assets/configuracion/LOGO2.png`;
-
-        // Update the meta tags
-        this.metaTagService.updateTag({ name: 'description', content: description });
-        this.metaTagService.updateTag({ name: 'title', content: title });
-        this.metaTagService.updateTag({ name: 'keywords', content: keywords });
-
-        // Open Graph meta tags for social sharing
-        this.metaTagService.updateTag({ property: 'og:title', content: title });
-        this.metaTagService.updateTag({ property: 'og:description', content: description });
-        this.metaTagService.updateTag({ property: 'og:image', content: imageUrl });
-        this.metaTagService.updateTag({ property: 'og:url', content: `${baseHref}/shop/products/${id}/${urlAmigable}` });
-
-        // Twitter Card meta tags
-        this.metaTagService.updateTag({ name: 'twitter:title', content: title });
-        this.metaTagService.updateTag({ name: 'twitter:description', content: description });
-        this.metaTagService.updateTag({ name: 'twitter:image', content: imageUrl });
-
-        console.log("fin meta tags updated");
     }
 
 }
