@@ -38,9 +38,6 @@ export class PageProductComponent implements OnInit {
         private metaTagService: Meta,
     ) { 
         this.productSlug = this.route.snapshot.params['productSlug'] || this.route.snapshot.data['productSlug'] || null;
-    }
-
-    ngOnInit(): void {
 
         this.route.data.subscribe((data) => {
             
@@ -64,6 +61,11 @@ export class PageProductComponent implements OnInit {
             //     this.relatedProducts = relatedProducts;
             // });
         });
+    }
+
+    ngOnInit(): void {
+
+       
 
         // this.route.paramMap.subscribe(data => {
 
@@ -141,7 +143,7 @@ export class PageProductComponent implements OnInit {
         const keywords = `${name}, ${brand?.['name']}, precio, comprar, ${rating} estrellas, ${inventario} en stock, ${price}`;
 
         // Set product image for Open Graph and Twitter Cards
-        const imageUrl = images?.length ? images[0] : `${baseHref}/assets/configuracion/LOGO2.png`;
+        const imageUrl = images?.length ? images[0] : `${baseHref}assets/configuracion/LOGO2.png`;
 
         // Update the meta tags
         this.metaTagService.updateTag({ name: 'description', content: description });

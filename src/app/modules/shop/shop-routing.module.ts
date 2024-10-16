@@ -42,6 +42,9 @@ const routes: Routes = [
     {
         path: 'products/:productSlug/:urlAmigable',
         component: PageProductComponent,
+        resolve: {
+            product: productResolver
+        },
         data: {
             // Product page layout. Possible values: 'standard', 'columnar', 'sidebar'.
             layout: 'standard',
@@ -49,9 +52,6 @@ const routes: Routes = [
             // It does not matter if the value of the 'layout' parameter is not 'sidebar'.
             // For LTR scripts "start" is "left" and "end" is "right".
             sidebarPosition: 'start'
-        },
-        resolve: {
-            product: productResolver
         }
     },
     {
