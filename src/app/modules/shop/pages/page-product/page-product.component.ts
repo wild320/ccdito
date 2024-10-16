@@ -72,9 +72,9 @@ export class PageProductComponent implements OnInit {
         //     if(item && this.product == undefined){
 
         //         this.product = item;
-                
+
         //         this.setupProductDetails();
-                
+
         //         this.setMetaTags();
         //     }
         //    //this.articulossvc.getArticuloDetalle()?.item;
@@ -97,7 +97,7 @@ export class PageProductComponent implements OnInit {
             this.product["NombreUnidadV"] = nombreUnidadV;
         }
 
-       // this.SetBreadcrumbs(this.articulossvc.getArticuloDetalle().breadcrumbs);
+        this.SetBreadcrumbs(this.articulossvc.getArticuloDetalle().breadcrumbs);
         this.transferState.set(PRODUCT_KEY, this.product);
         this.articulossvc.SetSeleccionarArticuloDetalle(Number(this.productSlug), false);
     }
@@ -110,7 +110,7 @@ export class PageProductComponent implements OnInit {
     }
 
     setMetaTags(): void {
-        const negocio = this.negocioConfig; 
+        const negocio = this.negocioConfig;
 
         if (!this.product) return alert("Esperando Porducto"); // Verifica que el producto esté disponible
 
@@ -124,15 +124,17 @@ export class PageProductComponent implements OnInit {
         const keywords = `${name}, ${brand?.['name']}, precio, comprar, ${rating} estrellas, ${inventario} en stock, ${price}`;
         const imageUrl = images?.length ? images[0] : `${baseHref}assets/configuracion/LOGO2.png`;
 
-        this.metaTagService.updateTag({ name: 'description', content: description });
-        this.metaTagService.updateTag({ name: 'title', content: title });
-        this.metaTagService.updateTag({ name: 'keywords', content: keywords });
-        this.metaTagService.updateTag({ property: 'og:title', content: title });
-        this.metaTagService.updateTag({ property: 'og:description', content: description });
-        this.metaTagService.updateTag({ property: 'og:image', content: imageUrl });
-        this.metaTagService.updateTag({ property: 'og:url', content: `${baseHref}/shop/products/${id}/${urlAmigable}` });
-        this.metaTagService.updateTag({ name: 'twitter:title', content: title });
-        this.metaTagService.updateTag({ name: 'twitter:description', content: description });
-        this.metaTagService.updateTag({ name: 'twitter:image', content: imageUrl });
+        this.metaTagService.addTags([
+            { name: 'description', content: description }, 
+            { name: 'title', content: title }, 
+            { name: 'keywords', content: keywords },
+            { property: 'og:title', content: title },
+            { property: 'og:description', content: description },
+            { property: 'og:image', content: imageUrl },
+            { property: 'og:url', content: `${baseHref}/shop/products/${id}/${urlAmigable}` },
+            { name: 'twitter:title', content: title },
+            { name: 'twitter:description', content: description },
+            { name: 'twitter:image', content: imageUrl }
+        ]);
     }
 }
