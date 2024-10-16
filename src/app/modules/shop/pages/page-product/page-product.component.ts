@@ -8,9 +8,9 @@ import { ArticulosService } from '../../../../shared/services/articulos.service'
 
 // modelos
 import { Meta, Title } from '@angular/platform-browser';
-import { Item } from '../../../../../data/modelos/articulos/Items';
 import { NegocioService } from 'src/app/shared/services/negocio.service';
 import { StoreService } from 'src/app/shared/services/store.service';
+import { Item } from '../../../../../data/modelos/articulos/Items';
 
 const PRODUCT_KEY = makeStateKey<Item>('product');
 
@@ -55,6 +55,23 @@ export class PageProductComponent implements OnInit {
 
             if (resolvedProduct) {
                 this.product = resolvedProduct;
+
+                this.cadenaString = this.product.name;
+
+                this.valorProductoUnit = this.product.price;
+
+                const regExp = /\(([^)]+)\)/;
+
+                const matches = regExp.exec(this.cadenaString);
+
+                if (matches) {
+                    const [valorUnitario, nombreUnidadV] = matches[1].split(' ');
+
+                    // Calcular valor por unidad
+                    const valor = parseInt(this.valorProductoUnit, 10) / parseInt(valorUnitario, 10);
+                    this.product["ValorUnidadV"] = `${valor}`;
+                    this.product["NombreUnidadV"] = nombreUnidadV;
+                }
                 console.log('setMetaTags', negocio, this.product);
 
                 const { name, caracteristicas, brand, images, price, rating, inventario, urlAmigable, id } = this.product;
@@ -98,11 +115,27 @@ export class PageProductComponent implements OnInit {
                 this.transferState.set(PRODUCT_KEY, resolvedProduct);
             }
 
-            // Fetch related products separately
-            // this.articulossvc.RecuperarArticulosRelacionados(Number(this.productSlug));
-            // this.articulossvc.getArticulosRelacionados$().subscribe(relatedProducts => {
-            //     this.relatedProducts = relatedProducts;
+            // this.articulossvc.getArticuloDetalle$().subscribe(Data => {
+            //     this.product = this.articulossvc.getArticuloDetalle().item;
+
+            //     if (this.product) {
+
+
+
+            //     } else {
+            //         this.articulossvc.SetSeleccionarArticuloDetalle(Number(this.productSlug), true);
+            //     }
+
+            //     this.SetBreadcrumbs(this.articulossvc.getArticuloDetalle().breadcrumbs);
             // });
+
+            this.articulossvc.SetSeleccionarArticuloDetalle(Number(this.productSlug), false);
+
+            // Fetch related products separately
+            this.articulossvc.RecuperarArticulosRelacionados(Number(this.productSlug));
+            this.articulossvc.getArticulosRelacionados$().subscribe(relatedProducts => {
+                this.relatedProducts = relatedProducts;
+            });
         });
     }
 
@@ -110,46 +143,6 @@ export class PageProductComponent implements OnInit {
 
 
 
-        // this.route.paramMap.subscribe(data => {
-
-        //     console.log(data)
-
-        //     this.ArticulosSuscribe$ = this.articulossvc.getArticuloDetalle$().subscribe(Data => {
-        //         this.product = this.articulossvc.getArticuloDetalle().item;
-
-        //         // if (this.product) {
-        //         //     this.setMetaTags();
-        //         //     this.cadenaString = this.product.name;
-        //         //     this.valorProductoUnit = this.product.price;
-
-        //         //     const regExp = /\(([^)]+)\)/;
-        //         //     const matches = regExp.exec(this.cadenaString);
-
-        //         //     if (matches) {
-        //         //         const [valorUnitario, nombreUnidadV] = matches[1].split(' ');
-
-        //         //         // Calcular valor por unidad
-        //         //         const valor = parseInt(this.valorProductoUnit, 10) / parseInt(valorUnitario, 10);
-        //         //         this.product["ValorUnidadV"] = `${valor}`;
-        //         //         this.product["NombreUnidadV"] = nombreUnidadV;
-        //         //     }
-        //         // } else {
-        //         //     this.articulossvc.SetSeleccionarArticuloDetalle(Number(this.productSlug), true);
-        //         // }
-
-        //         // this.SetBreadcrumbs(this.articulossvc.getArticuloDetalle().breadcrumbs);
-        //     });
-
-        //     // this.articulossvc.SetSeleccionarArticuloDetalle(Number(this.productSlug), false);
-        //     // this.articulossvc.RecuperarArticulosRelacionados(Number(this.getProductoSlug()));
-
-        //     // // tslint:disable-next-line: deprecation
-
-        //     // this.articulossvc.getArticulosRelacionados$().subscribe(data => {
-        //     //     this.relatedProducts = this.articulossvc.getArticulosRelacionados();
-        //     // });
-
-        // });
 
 
     }
