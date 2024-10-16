@@ -47,7 +47,7 @@ export class PageProductComponent implements OnInit {
 
             this.articulossvc.getArticuloDetalle$().subscribe(Data => {
                 console.log("Observador", data);
-                // this.product = this.articulossvc.getArticuloDetalle().item;
+                this.product = this.articulossvc.getArticuloDetalle().item;
             });
 
             this.layout = data['layout'] || this.layout;
@@ -59,9 +59,6 @@ export class PageProductComponent implements OnInit {
             const resolvedProduct = data['product'];
 
             if (resolvedProduct) {
-
-
-                this.setMetaTags(negocio);
 
                 this.product = resolvedProduct;
 
@@ -88,7 +85,7 @@ export class PageProductComponent implements OnInit {
             } else {
                 this.articulossvc.SetSeleccionarArticuloDetalle(Number(this.productSlug), true);
             }
-
+            this.setMetaTags(negocio);
 
             this.articulossvc.SetSeleccionarArticuloDetalle(Number(this.productSlug), false);
 
