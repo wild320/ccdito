@@ -1,4 +1,4 @@
-import { Component, makeStateKey, TransferState } from '@angular/core';
+import { Component } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { NegocioService } from 'src/app/shared/services/negocio.service';
@@ -7,8 +7,6 @@ import { Item } from '../../../../../data/modelos/articulos/Items';
 import { ShopService } from '../../../../shared/api/shop.service';
 import { Link } from '../../../../shared/interfaces/link';
 import { ArticulosService } from '../../../../shared/services/articulos.service';
-
-const PRODUCT_KEY = makeStateKey<Item>('product');
 
 @Component({
     selector: 'app-page-product',
@@ -31,7 +29,6 @@ export class PageProductComponent {
         private shop: ShopService,
         private route: ActivatedRoute,
         public articulossvc: ArticulosService,
-        private transferState: TransferState,
         private negocio: NegocioService,
         private titleService: Title,
         public StoreSvc: StoreService,
@@ -40,7 +37,6 @@ export class PageProductComponent {
         this.productSlug = this.route.snapshot.params['productSlug'] || null;
 
         this.route.data.subscribe(data => {
-            console.log("route", data);
 
             const resolvedProduct = data['product'];
 
@@ -51,12 +47,11 @@ export class PageProductComponent {
             this.negocioConfig = this.negocio.configuracion;
 
             if (resolvedProduct) {
-                console.log(resolvedProduct)
                 this.product = resolvedProduct;
                 this.setupProductDetails();
                 this.setMetaTags();
-            } 
-            
+            }
+
             this.articulossvc.RecuperarArticulosRelacionados(Number(this.productSlug));
             this.articulossvc.getArticulosRelacionados$().subscribe(relatedProducts => {
                 this.relatedProducts = relatedProducts;
@@ -80,8 +75,7 @@ export class PageProductComponent {
         }
 
         this.SetBreadcrumbs(this.articulossvc.getArticuloDetalle().breadcrumbs);
-        this.transferState.set(PRODUCT_KEY, this.product);
-        this.articulossvc.SetSeleccionarArticuloDetalle(Number(this.productSlug), false);
+
     }
 
     SetBreadcrumbs(breadcrumbs: any[]): void {

@@ -2,7 +2,7 @@
 
 <ng-container *ngIf="layout !== 'sidebar'">
     <div class="block">
-        <div class="container">
+        <div class="container" *ngIf="product">
             <app-product [product]="product" [layout]="layout"></app-product>
             <app-product-tabs [product]="product"></app-product-tabs>
         </div>

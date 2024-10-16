@@ -246,15 +246,12 @@ export class ArticulosService {
   }
 
   async SetSeleccionarArticuloDetalle(idArticulo: number, SiempreRecuperar: boolean) {
-    console.log("setSeleccionarArticuloDetalle", idArticulo, SiempreRecuperar)
-    try {
-          // Si el articulo no existe aun debe consultarlo a la api
+    // Si el articulo no existe aun debe consultarlo a la api
     if (this.getArticulos()?.products === undefined || SiempreRecuperar) {
-      this.RecuperarArticuloDetalle(idArticulo);
+      await this.RecuperarArticuloDetalle(idArticulo);
 
     } else if (this.getArticulos().products.items.findIndex(element => element.id === idArticulo) == -1) {
-      this.RecuperarArticuloDetalle(idArticulo);
-
+      await this.RecuperarArticuloDetalle(idArticulo);
 
     } else {
       const index = this.getArticulos().products.items.findIndex(element => element.id === idArticulo);
@@ -262,13 +259,6 @@ export class ArticulosService {
       this.seleccionado.breadcrumbs = this.getArticulos().breadcrumbs;
       this.setArticuloDetalle$(this.seleccionado);
     }
-      
-    } catch (error) {
-      console.error('Error al recuperar articulo detalle', error);
-      
-    }
-
-
   }
 
   setFiltersCarro$(newValue) {

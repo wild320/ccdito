@@ -11,6 +11,7 @@ import { PageProductComponent } from './pages/page-product/page-product.componen
 import { ProductsListResolverService } from './resolvers/products-list-resolver.service';
 import { PageOrderSuccessComponent } from './pages/page-order-success/page-order-success.component';
 import { productResolver } from './resolvers/product.resolver';
+import { appDataResolver } from 'src/app/providers/appData.resolver';
 
 const categoryPageData: Data = {
     // Number of products per row. Possible values: 3, 4, 5.
@@ -43,6 +44,7 @@ const routes: Routes = [
         path: 'products/:productSlug/:urlAmigable',
         component: PageProductComponent,
         resolve: {
+            appData: appDataResolver,
             product: productResolver
         },
         data: {

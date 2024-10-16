@@ -13,6 +13,7 @@ import { UtilsTexto } from '../../utils/UtilsTexto';
 import { Item } from '../../../../data/modelos/articulos/Items';
 import { StoreService } from '../../services/store.service';
 import { isPlatformBrowser } from '@angular/common';
+import { ConfiguracionSitio } from 'src/data/modelos/negocio/ConfiguracionSitio';
 
 
 
@@ -41,6 +42,7 @@ export class ProductComponent implements OnInit {
         timeOut: 1000,
         tapToDismiss: true,
     };
+    configuracionSitio: ConfiguracionSitio;
 
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
@@ -52,11 +54,12 @@ export class ProductComponent implements OnInit {
         private utils: UtilsTexto,
         public storeSvc: StoreService,
     ) {
-
+        this.configuracionSitio = this.storeSvc.configuracionSitio;
+        console.log(this.configuracionSitio)
     }
 
     ngOnInit(): void {
-        if(isPlatformBrowser(this.platformId)) {
+        if (isPlatformBrowser(this.platformId)) {
             localStorage.setItem('is_page_update', '1')
             this.islogged = localStorage.getItem("isLogue");
             this.cargarFavoritos();
@@ -64,16 +67,16 @@ export class ProductComponent implements OnInit {
     }
 
     addToCart(): void {
-        
+
         console.log(this.product)
         const availableStock = this.product.inventario - this.product.inventarioPedido;
         const requestedQuantity = this.quantity.value;
-    
+
         // If already adding to cart, prevent further actions
         if (this.addingToCart) {
             return;
         }
-    
+
         // Check if the product can be added based on stock policy
         if (this.storeSvc.configuracionSitio.SuperarInventario || (requestedQuantity > 0 && requestedQuantity <= availableStock)) {
             this.addingToCart = true;
@@ -89,7 +92,7 @@ export class ProductComponent implements OnInit {
             );
         }
     }
-    
+
 
     addToWishlist() {
 
