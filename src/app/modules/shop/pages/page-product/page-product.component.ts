@@ -25,6 +25,7 @@ export class PageProductComponent implements OnInit {
     private cadenaString: string = "";
     private valorProductoUnit: any;
     private productSlug: string | null;
+    negocioConfig: any;
 
     constructor(
         private shop: ShopService,
@@ -39,19 +40,20 @@ export class PageProductComponent implements OnInit {
         this.productSlug = this.route.snapshot.params['productSlug'] || null;
 
         this.route.data.subscribe(data => {
-            
+
             const resolvedProduct = data['product'];
 
             this.layout = data['layout'] || this.layout;
 
             this.sidebarPosition = data['sidebarPosition'] || this.sidebarPosition;
 
-            const negocioConfig = this.negocio.configuracion;
+            this.negocioConfig = this.negocio.configuracion;
 
             if (resolvedProduct) {
+                console.log(resolvedProduct)
                 this.product = resolvedProduct;
                 this.setupProductDetails();
-                this.setMetaTags(negocioConfig);
+                this.setMetaTags();
             } else {
                 this.articulossvc.SetSeleccionarArticuloDetalle(Number(this.productSlug), true);
             }
@@ -64,10 +66,19 @@ export class PageProductComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.articulossvc.getArticuloDetalle$().subscribe(Data => {
-            console.log("Observador", Data);
-            //this.product = this.articulossvc.getArticuloDetalle().item;
-        });
+        // this.articulossvc.getArticuloDetalle$().subscribe(Data => {
+        //     console.log("Observador", {Data});
+        //     const { item } = Data;
+        //     if(item && this.product == undefined){
+
+        //         this.product = item;
+                
+        //         this.setupProductDetails();
+                
+        //         this.setMetaTags();
+        //     }
+        //    //this.articulossvc.getArticuloDetalle()?.item;
+        // });
 
     }
 
@@ -86,7 +97,7 @@ export class PageProductComponent implements OnInit {
             this.product["NombreUnidadV"] = nombreUnidadV;
         }
 
-        this.SetBreadcrumbs(this.articulossvc.getArticuloDetalle().breadcrumbs);
+       // this.SetBreadcrumbs(this.articulossvc.getArticuloDetalle().breadcrumbs);
         this.transferState.set(PRODUCT_KEY, this.product);
         this.articulossvc.SetSeleccionarArticuloDetalle(Number(this.productSlug), false);
     }
@@ -98,7 +109,9 @@ export class PageProductComponent implements OnInit {
         this.breadcrumbs = this.shop.breadcrumbs;
     }
 
-    setMetaTags(negocio): void {
+    setMetaTags(): void {
+        const negocio = this.negocioConfig; 
+
         if (!this.product) return alert("Esperando Porducto"); // Verifica que el producto esté disponible
 
         const { name, caracteristicas, brand, images, price, rating, inventario, urlAmigable, id } = this.product;

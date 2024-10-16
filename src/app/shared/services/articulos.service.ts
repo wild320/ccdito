@@ -246,6 +246,7 @@ export class ArticulosService {
   }
 
   async SetSeleccionarArticuloDetalle(idArticulo: number, SiempreRecuperar: boolean) {
+    console.log("setSeleccionarArticuloDetalle", idArticulo, SiempreRecuperar)
     try {
           // Si el articulo no existe aun debe consultarlo a la api
     if (this.getArticulos()?.products === undefined || SiempreRecuperar) {
