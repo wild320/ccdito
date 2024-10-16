@@ -1,4 +1,4 @@
-import { Component, makeStateKey, OnInit, TransferState } from '@angular/core';
+import { Component, makeStateKey, TransferState } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { NegocioService } from 'src/app/shared/services/negocio.service';
@@ -15,7 +15,7 @@ const PRODUCT_KEY = makeStateKey<Item>('product');
     templateUrl: './page-product.component.html',
     styleUrls: ['./page-product.component.scss']
 })
-export class PageProductComponent implements OnInit {
+export class PageProductComponent {
     relatedProducts: Item[] = [];
     product: Item | null = null;
     ArticulosSuscribe$: any;
@@ -40,6 +40,7 @@ export class PageProductComponent implements OnInit {
         this.productSlug = this.route.snapshot.params['productSlug'] || null;
 
         this.route.data.subscribe(data => {
+            console.log("route", data);
 
             const resolvedProduct = data['product'];
 
@@ -54,32 +55,13 @@ export class PageProductComponent implements OnInit {
                 this.product = resolvedProduct;
                 this.setupProductDetails();
                 this.setMetaTags();
-            } else {
-                this.articulossvc.SetSeleccionarArticuloDetalle(Number(this.productSlug), true);
-            }
-
+            } 
+            
             this.articulossvc.RecuperarArticulosRelacionados(Number(this.productSlug));
             this.articulossvc.getArticulosRelacionados$().subscribe(relatedProducts => {
                 this.relatedProducts = relatedProducts;
             });
         });
-    }
-
-    ngOnInit(): void {
-        // this.articulossvc.getArticuloDetalle$().subscribe(Data => {
-        //     console.log("Observador", {Data});
-        //     const { item } = Data;
-        //     if(item && this.product == undefined){
-
-        //         this.product = item;
-
-        //         this.setupProductDetails();
-
-        //         this.setMetaTags();
-        //     }
-        //    //this.articulossvc.getArticuloDetalle()?.item;
-        // });
-
     }
 
     private setupProductDetails(): void {
@@ -110,12 +92,8 @@ export class PageProductComponent implements OnInit {
     }
 
     setMetaTags(): void {
-        const negocio = this.negocioConfig;
 
-        if (!this.product) {
-            alert("Esperando Porducto")
-            return;
-        }; // Verifica que el producto esté disponible
+        const negocio = this.negocioConfig;
 
         const { name, caracteristicas, brand, images, price, rating, inventario, urlAmigable, id } = this.product;
 

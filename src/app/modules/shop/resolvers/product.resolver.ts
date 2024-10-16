@@ -4,33 +4,31 @@ import { ArticulosService } from 'src/app/shared/services/articulos.service';
 import { Item } from 'src/data/modelos/articulos/Items';
 
 export const productResolver: ResolveFn<Item | null> = async (route, state) => {
-  const articulossvc = inject(ArticulosService); 
+  const articulossvc = inject(ArticulosService);
   const productSlug = route.paramMap.get('productSlug'); // Obtener el parámetro de la URL
 
   // Intentar obtener el producto desde el servicio (si ya está cargado en memoria)
-  const cachedProduct = articulossvc.getArticuloDetalle()?.item;
+  let cachedProduct = articulossvc.getArticuloDetalle()?.item;
 
-  console.log("cachedProduct", cachedProduct)
+  console.log("cachedProduct", cachedProduct);
 
-  if (cachedProduct) {
-    return cachedProduct; // Devolver el producto si ya está cargado en el servicio
-  }
-
-  // Si no hay producto en el servicio, hacer la petición HTTP
-  if (productSlug) {
+  if (!cachedProduct && productSlug) {
     try {
-      // Hacer la petición HTTP para obtener el detalle del producto
+      // Hacer la petición HTTP para obtener el detalle del producto si no está cacheado
       await articulossvc.SetSeleccionarArticuloDetalle(Number(productSlug), true);
-      const fetchedProduct = articulossvc.getArticuloDetalle()?.item;
+      cachedProduct = articulossvc.getArticuloDetalle()?.item;
 
-      console.log("fetchedProduct", fetchedProduct)
+      console.log("fetchedProduct", cachedProduct);
 
-      return fetchedProduct || null; // Devolver el producto recuperado o null si no existe
+      // Verificar si el producto fue correctamente recuperado
+      if (!cachedProduct) {
+        throw new Error(`Producto no encontrado para el slug ${productSlug}`);
+      }
     } catch (error) {
       console.error('Error fetching product details', error);
       return null; // Manejar el error devolviendo null
     }
   }
 
-  return null; // Devolver null si no hay `productSlug`
+  return cachedProduct || null; // Devolver el producto cacheado o recuperado
 };
