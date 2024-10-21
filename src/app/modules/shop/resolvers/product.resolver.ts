@@ -1,4 +1,5 @@
-import { inject } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
+import { inject, PLATFORM_ID } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import type { ResolveFn } from '@angular/router';
 import { ArticulosService } from 'src/app/shared/services/articulos.service';
@@ -12,20 +13,18 @@ export const productResolver: ResolveFn<Item> = async (route, state) => {
   const titleService = inject(Title);
 
   const productSlug = route.paramMap.get('productSlug');
-  let cachedProduct = articulossvc.getArticuloDetalle()?.item;
 
-  if (!cachedProduct && productSlug) {
-    try {
+  const platformId = inject(PLATFORM_ID);
+
+  if (isPlatformServer(platformId)) {
+
+    let cachedProduct = articulossvc.getArticuloDetalle()?.item;
+    if (!cachedProduct && productSlug) {
       await articulossvc.SetSeleccionarArticuloDetalle(Number(productSlug), true);
-      cachedProduct = articulossvc.getArticuloDetalle()?.item;
 
-      if (!cachedProduct) {
-        throw new Error(`Producto no encontrado para el slug ${productSlug}`);
-      }
-
-      // Aquí puedes configurar los meta tags
       const negocio = negocioSvc.configuracion;
-      const { name, caracteristicas, brand, images, price, rating, inventario, urlAmigable, id } = cachedProduct;
+      const { name, caracteristicas, brand, images, price, rating, inventario, urlAmigable, id } = articulossvc.getArticuloDetalle()?.item;
+     // cachedProduct = articulossvc.getArticuloDetalle()?.item;
 
       titleService.setTitle(`${negocio.NombreCliente} | ${name}`);
       const description = caracteristicas || 'Compra este producto de alta calidad al mejor precio.';
@@ -45,12 +44,12 @@ export const productResolver: ResolveFn<Item> = async (route, state) => {
         { name: 'twitter:description', content: description },
         { name: 'twitter:image', content: imageUrl }
       ]);
-
-    } catch (error) {
-      console.error('Error fetching product details', error);
-      return null;
     }
+
+
+    console.log("resolverw", articulossvc.getArticuloDetalle()?.item)
+    return cachedProduct;
   }
 
-  return cachedProduct;
+
 };

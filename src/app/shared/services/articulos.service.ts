@@ -233,10 +233,11 @@ export class ArticulosService {
   }
 
   getArticuloDetalle(): ArticuloSeleccionado {
+    console.log("getArticuloDetalle()", this.ArticulosDetalle)
     return this.ArticulosDetalle;
   }
 
-  setArticuloDetalle$(newValue) {
+  setArticuloDetalle$(newValue: ArticuloSeleccionado) {
     this.ArticulosDetalle = newValue;
     this.ArticulosDetalle$.next(newValue);
   }
@@ -248,9 +249,11 @@ export class ArticulosService {
   async SetSeleccionarArticuloDetalle(idArticulo: number, SiempreRecuperar: boolean) {
     // Si el articulo no existe aun debe consultarlo a la api
     if (this.getArticulos()?.products === undefined || SiempreRecuperar) {
+      console.log("if")
       await this.RecuperarArticuloDetalle(idArticulo);
 
     } else if (this.getArticulos().products.items.findIndex(element => element.id === idArticulo) == -1) {
+      console.log("else if")
       await this.RecuperarArticuloDetalle(idArticulo);
 
     } else {
@@ -258,6 +261,7 @@ export class ArticulosService {
       this.seleccionado.item = this.getArticulos().products.items[index];
       this.seleccionado.breadcrumbs = this.getArticulos().breadcrumbs;
       this.setArticuloDetalle$(this.seleccionado);
+      console.log("else")
     }
   }
 
@@ -845,7 +849,7 @@ export class ArticulosService {
   }
   
 
-  public RecuperarArticuloDetalle(Id: number) {
+  public async RecuperarArticuloDetalle(Id: number) {
 
     this.UrlServicio =
       this.negocio.configuracion.UrlServicioCarroCompras +
@@ -861,24 +865,15 @@ export class ArticulosService {
 
     this.setIsLoading(true);
 
-    return this.httpClient.get(`${this.UrlServicio}/${IdEmpresa}/${IdArticulo}`)
-      .toPromise()
-      .then((art: any) => {
+    const art  = await firstValueFrom(this.httpClient.get<any>(`${this.UrlServicio}/${IdEmpresa}/${IdArticulo}`));
 
-        const { articulo, breadcrumbs } = art
+    const { articulo, breadcrumbs } = art
 
-        this.seleccionado.item = articulo;
-        this.seleccionado.breadcrumbs = breadcrumbs;
+    this.seleccionado.item = articulo;
+    
+    this.seleccionado.breadcrumbs = breadcrumbs;
 
-        this.setArticuloDetalle$(this.seleccionado);
-
-      })
-      .catch((err: any) => {
-
-        this.setIsLoading(false);
-        console.log('RecuperarArticuloDetalle Error al consumir servicio:' + err.message);
-
-      });
+    this.setArticuloDetalle$(this.seleccionado);
 
   }
 

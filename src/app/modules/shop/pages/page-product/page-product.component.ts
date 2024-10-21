@@ -48,8 +48,9 @@ export class PageProductComponent {
 
             if (resolvedProduct) {
                 this.product = resolvedProduct;
+                console.log(this.product);
                 this.setupProductDetails();
-                this.setMetaTags();
+               // this.setMetaTags();
             }
 
             this.articulossvc.RecuperarArticulosRelacionados(Number(this.productSlug));
