@@ -1,1 +1,192 @@
-<h1>{{product?.name}}</h1>
+<div class="product product--layout--{{ layout }}" *ngIf="product">
+    <div class="product__content">
+        <!-- .product__gallery -->
+        
+        
+        <div class="product__gallery">
+            <div *ngIf="product.badges.length" class="product-card__badges-list2">
+                <div *ngIf="product.badges.includes('Oferta')" class="product-card__badge product-card__badge--sale">Oferta</div>
+                <div *ngIf="product.badges.includes('Mas Vendidos')" class="product-card__badge product-card__badge--hot">Mas Vendidos</div>
+                <div *ngIf="product.badges.includes('Nuevo')" class="product-card__badge product-card__badge--new">Nuevo</div>
+            </div>
+            <app-product-gallery  [ngClass]="{'imagen' : product.availability === 'No Disponible' && !configuracionSitio.SuperarInventario}"
+            [productLayout]="layout" [images]="product.images"></app-product-gallery>
+        </div>
+        <!-- .product__gallery / end -->
+        <!-- .product__info -->
+        <div class="product__info">
+            <div class="product__wishlist-compare">
+                <button type="button" class="btn btn-sm btn-light btn-svg-icon" data-toggle="tooltip" data-placement="right" title="Wishlist"
+                        appClick (click)="addToWishlist()"
+                        [ngClass]="{'btn-loading': addingToWishlist}">
+                    <app-icon name="wishlist-16" size="16"></app-icon>
+                </button>
+                <button type="button" class="btn btn-sm btn-light btn-svg-icon" data-toggle="tooltip" data-placement="right" title="Compare"
+                        appClick (click)="addToCompare()"
+                        [ngClass]="{'btn-loading': addingToCompare}">
+                    <app-icon name="compare-16" size="16"></app-icon>
+                </button>
+            </div>
+            <h1 class="product__name">{{ product.name | titlecase }}</h1>
+            <div class="product__rating">
+                <div class="product__rating-stars">
+                    <app-rating [value]="product.rating"></app-rating>
+                </div>
+                <div class="product__rating-legend">
+                    <a href="" appClick>{{ product.reviews }} Comentarios</a><span>/</span><a href="" appClick>Escribe un Comentario</a>
+                </div>
+            </div>
+            <div class="product__description">
+                {{product.caracteristicas | lowercase}}
+            </div>
+            <!--
+            <ul class="product__features">
+                <li>Speed: 750 RPM</li>
+                <li>Power Source: Cordless-Electric</li>
+                <li>Battery Cell Type: Lithium</li>
+                <li>Voltage: 20 Volts</li>
+                <li>Battery Capacity: 2 Ah</li>
+            </ul>
+            -->
+            <ul class="product__meta">
+
+                <li class="product__meta-availability">Inventario:
+
+                    <span *ngIf="product.availability === 'Disponible'" class="text-success">{{product.availability}}</span>
+                    <span *ngIf="product.availability === 'No Disponible'" class="text-danger">{{product.availability}}</span>
+
+                </li>
+                <li>Descuento:{{ product.discountPerc | percentPipe }}</li>
+                <li *ngIf="storeSvc.configuracionSitio.VerMarcaDetalleProducto">Marca: <a href="" appClick>{{product.marca | titlecase}}</a></li>
+                <li>SKU: {{product.sku}}</li>
+                <li>Presentación: {{product.descUM | titlecase}}</li>
+                <li *ngIf="product.ValorUnidadV && product.NombreUnidadV"> Valor por {{product.NombreUnidadV | titlecase}}: {{product.ValorUnidadV | currencyFormat:'$'}}
+                </li>
+            </ul>
+        </div>
+        <!-- .product__info / end -->
+        <!-- .product__sidebar -->
+        <div class="product__sidebar">
+            <div class="product__availability">
+                Inventario: <span class="text-success">{{product.availability}}</span>
+            </div>
+
+            <div class="product__prices" *ngIf="configuracionSitio.MostrarPreciosSinLogueo || this.islogged==='true'">
+                <div *ngIf="product.discountPerc > 0" >
+                    <div class="product-card__badge product-card__badge--sale tag-sale">- {{ product.discountPerc | percentPipe }}</div>
+                </div>
+                
+                <ng-container *ngIf="product.compareAtPrice">
+                    <span class="product__new-price">{{ product.price|currencyFormat }}</span>{{ ' ' }}
+                    <span class="product__old-price">{{ product.compareAtPrice|currencyFormat }}</span>
+                </ng-container>
+                <ng-container *ngIf="!product.compareAtPrice">
+                    {{ product.price|currencyFormat }}
+                </ng-container>
+         
+            </div>
+            <!-- .product__options -->
+            <form class="product__options" novalidate>
+                <div class="form-group product__option">
+                    <label class="product__option-label">Color</label>
+                    <div class="input-radio-color">
+                        <div class="input-radio-color__list">
+
+
+                            <label class="input-radio-color__item input-radio-color__item--white" [ngStyle]="{'color': product.colorhx}"  data-toggle="tooltip" title={{product.color}}>
+
+
+
+                                <span></span>
+                            </label>
+                             <!--
+                            <label class="input-radio-color__item" style="color: #ffd333;" data-toggle="tooltip" title="Yellow">
+                                <input type="radio" name="color">
+                                <span></span>
+                            </label>
+                            <label class="input-radio-color__item" style="color: #ff4040;" data-toggle="tooltip" title="Red">
+                                <input type="radio" name="color">
+                                <span></span>
+                            </label>
+
+                            <label class="input-radio-color__item input-radio-color__item--disabled" style="color: #4080ff;" data-toggle="tooltip" title="Blue">
+                                <input type="radio" name="color" disabled>
+                                <span></span>
+                            </label>
+                            -->
+                        </div>
+                    </div>
+                </div>
+                <!--
+                <div class="form-group product__option">
+                    <label class="product__option-label">Material</label>
+                    <div class="input-radio-label">
+                        <div class="input-radio-label__list">
+                            <label>
+                                <input type="radio" name="material">
+                                <span>Metal</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="material">
+                                <span>Wood</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="material" disabled>
+                                <span>Plastic</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                -->
+                <div class="form-group product__option">
+                    <label class="product__option-label">Cantidad</label>
+                    <div class="product__actions">
+                        <div class="product__actions-item">
+                            <app-input-number aria-label="Quantity" class="product__quantity" size="lg" [min]="1" [formControl]="quantity"></app-input-number>
+                        </div>
+                        <div class="product__actions-item product__actions-item--addtocart" >
+                            <button  [disabled]="product.availability === 'No Disponible' && !configuracionSitio.SuperarInventario" type="button" class="btn btn-primary btn-lg"
+                                    [ngClass]="{'btn-loading': addingToCart}"
+                                    appClick (click)="addToCart()">Agregar al Carro</button>
+                        </div>
+                        <div class="product__actions-item product__actions-item--wishlist">
+                            <button type="button" class="btn btn-secondary btn-svg-icon btn-lg" data-toggle="tooltip" title="Lista de Deseos"
+                            [ngClass]="{'btn-loading': addingToWishlist, 'wishlist' : esFavorito}"
+                                    appClick (click)="addToWishlist()">
+                                <app-icon name="wishlist-16" size="16"></app-icon>
+                            </button>
+                        </div>
+                        <div class="product__actions-item product__actions-item--compare" *ngIf="storeSvc.configuracionSitio.VerCompararProductos">
+                            <button type="button" class="btn btn-secondary btn-svg-icon btn-lg"  title="Comparar"
+                                    [ngClass]="{'btn-loading': addingToCompare}"
+                                    appClick (click)="addToCompare()">
+                                <app-icon name="compare-16" size="16"></app-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!-- .product__options / end -->
+        </div>
+        <!-- .product__end -->
+        <div class="product__footer">
+            <!--
+            <div class="product__tags tags">
+                <div class="tags__list">
+                    <a href="" appClick>Mounts</a>
+                    <a href="" appClick>Electrodes</a>
+                    <a href="" appClick>Chainsaws</a>
+                </div>
+            </div>
+            -->
+
+            <app-share-buttons
+                class="product__share-buttons"
+                [buttons]="['facebook', {type: 'twitter', label: 'Tweet'}, 'whatsapp']"
+                [pageUrl]="root.product(product.id,product.urlAmigable)"
+                [pageTitle]="product.name"
+                [pageImage]="product.images[0]"
+            ></app-share-buttons>
+        </div>
+    </div>
+</div>
